@@ -44,6 +44,7 @@ interface Scenario {
   description: string
   descriptionEn: string
   icon: string
+  skills?: string[]
 }
 
 const scenarios: Scenario[] = [
@@ -54,6 +55,7 @@ const scenarios: Scenario[] = [
     description: '日程管理、邮件处理、文件整理',
     descriptionEn: 'Schedule management, email handling, file organization',
     icon: 'user',
+    skills: ['email', 'google-calendar', 'google-maps', 'file-system', 'notion'],
   },
   {
     id: 'developer',
@@ -62,6 +64,7 @@ const scenarios: Scenario[] = [
     description: '代码编写、测试、多Agent协作',
     descriptionEn: 'Code writing, testing, multi-agent collaboration',
     icon: 'code',
+    skills: ['github', 'npm', 'docker', 'terminal', 'git', 'code-execution', 'agent-browser'],
   },
   {
     id: 'ecommerce',
@@ -70,6 +73,7 @@ const scenarios: Scenario[] = [
     description: '库存监控、价格调整、订单处理',
     descriptionEn: 'Inventory monitoring, price adjustment, order processing',
     icon: 'shopping-bag',
+    skills: ['email', 'google-maps', 'google-search', 'browser', 'api-integration', 'screen-control'],
   },
   {
     id: 'content-creator',
@@ -78,6 +82,7 @@ const scenarios: Scenario[] = [
     description: '资讯收集、内容生成、账号管理',
     descriptionEn: 'Information gathering, content generation, account management',
     icon: 'megaphone',
+    skills: ['rss-browser', 'social-api', 'content-generation', 'web-fetch', 'google-search'],
   },
   {
     id: 'trading-assistant',
@@ -86,6 +91,7 @@ const scenarios: Scenario[] = [
     description: '交易执行、持仓分析、新闻监控',
     descriptionEn: 'Trading execution, position analysis, news monitoring',
     icon: 'trending-up',
+    skills: ['api-gateway', 'notion', 'browser', 'data-analysis', 'web-fetch'],
   },
   {
     id: 'flight-booking',
@@ -94,6 +100,7 @@ const scenarios: Scenario[] = [
     description: '订票改签、值机、客服处理',
     descriptionEn: 'Ticket booking, check-in, customer service',
     icon: 'plane',
+    skills: ['browser', 'intent-recognition', 'screen-control', 'email', 'google-calendar'],
   },
   {
     id: 'retail-customer-service',
@@ -102,6 +109,7 @@ const scenarios: Scenario[] = [
     description: '订单处理、问题解决、客户服务',
     descriptionEn: 'Order processing, problem solving, customer service',
     icon: 'store',
+    skills: ['api-integration', 'chatbot-flow', 'screen-control', 'browser', 'google-search'],
   },
   {
     id: 'manufacturing-qa',
@@ -110,6 +118,7 @@ const scenarios: Scenario[] = [
     description: '数据录入、报表生成、质检辅助',
     descriptionEn: 'Data entry, report generation, quality inspection',
     icon: 'factory',
+    skills: ['vision', 'screen-control', 'database', 'report-generation', 'file-system'],
   },
   {
     id: 'smart-home',
@@ -118,6 +127,7 @@ const scenarios: Scenario[] = [
     description: '设备控制、环境调节、自动化场景',
     descriptionEn: 'Device control, environment adjustment, automation',
     icon: 'home',
+    skills: ['iot-api', 'screen-control', 'google-calendar', 'web-fetch'],
   },
   {
     id: 'hr-admin',
@@ -126,6 +136,7 @@ const scenarios: Scenario[] = [
     description: '知识库管理、文档处理、流程自动化',
     descriptionEn: 'Knowledge base, document processing, workflow automation',
     icon: 'users',
+    skills: ['knowledge-base', 'notion', 'browser', 'ocr', 'email', 'google-calendar'],
   },
 ]
 
@@ -141,6 +152,8 @@ const channelManager = computed(() => new ChannelManager(channels.value))
 
 const installScript = computed(() => {
   if (!selectedScenario.value || !apiKey.value) return ''
+
+  const scenario = scenarios.find(s => s.id === selectedScenario.value?.id)
 
   const configObj = {
     meta: { 
@@ -191,6 +204,7 @@ const installScript = computed(() => {
   }
 
   const configJson = JSON.stringify(configObj, null, 2)
+  const skillsList = scenario?.skills?.join(', ') || ''
 
   return `#!/bin/bash
 echo "====== Step 1: Create Config ======"
@@ -213,7 +227,8 @@ npm install -g openclaw@latest
 
 echo ""
 echo "====== Step 4: Install Skills ======"
-echo "Skills installation skipped"
+echo "Installing skills for: ${scenario?.name || selectedScenario.value?.name || 'default'}"
+${skillsList ? `openclaw skills install ${skillsList}` : 'echo "No skills to install"'}
 
 echo ""
 echo "====== Step 5: Start Service ======"
