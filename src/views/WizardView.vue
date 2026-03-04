@@ -204,7 +204,6 @@ const installScript = computed(() => {
   }
 
   const configJson = JSON.stringify(configObj, null, 2)
-  const skillsList = scenario?.skills?.join(', ') || ''
 
   return `#!/bin/bash
 echo "====== Step 1: Create Config ======"
@@ -227,8 +226,7 @@ npm install -g openclaw@latest
 
 echo ""
 echo "====== Step 4: Install Skills ======"
-echo "Installing skills for: ${scenario?.name || selectedScenario.value?.name || 'default'}"
-${skillsList ? `openclaw skills install ${skillsList}` : 'echo "No skills to install"'}
+${scenario?.skills ? scenario.skills.map((skill: string) => `npx clawhub@latest install ${skill}`).join('\n') : 'echo "No skills to install"'}
 
 echo ""
 echo "====== Step 5: Start Service ======"
