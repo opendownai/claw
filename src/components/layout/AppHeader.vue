@@ -10,7 +10,7 @@ const { t } = useI18nStore()
     <div class="container header-content">
       <div class="header-left">
         <a href="/" class="header-link">
-          <span>OpenClaw</span>
+          <span class="header-title">OpenClaw</span>
         </a>
       </div>
       <div class="header-right">
@@ -46,7 +46,13 @@ const { t } = useI18nStore()
 }
 
 .header-link:hover {
-  color: var(--accent-blue);
+  color: var(--accent-green);
+}
+
+.header-title {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.08em;
 }
 
 .icon {
