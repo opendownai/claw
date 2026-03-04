@@ -6,7 +6,8 @@ import { ChannelManager } from '@/utils/channel-manager'
 import { channelOptions, type ChannelConfig } from '@/utils/channel-types'
 import { 
   Sparkles, ShoppingBag, Megaphone, User, Code, BookOpen, 
-  Copy, Check, ArrowRight, AlertCircle, HelpCircle, MessageCircle 
+  Copy, Check, ArrowRight, AlertCircle, HelpCircle, MessageCircle,
+  TrendingUp, Plane, Store, Factory, Home, Users, FactoryIcon
 } from 'lucide-vue-next'
 import ChannelCard from '@/components/wizard/ChannelCard.vue'
 
@@ -27,6 +28,13 @@ const iconMap: Record<string, any> = {
   'user': User,
   'code': Code,
   'book-open': BookOpen,
+  'trending-up': TrendingUp,
+  'plane': Plane,
+  'store': Store,
+  'factory': Factory,
+  'home': Home,
+  'users': Users,
+  'factory-icon': FactoryIcon,
 }
 
 interface Scenario {
@@ -70,6 +78,54 @@ const scenarios: Scenario[] = [
     description: '资讯收集、内容生成、账号管理',
     descriptionEn: 'Information gathering, content generation, account management',
     icon: 'megaphone',
+  },
+  {
+    id: 'trading-assistant',
+    name: '金融交易助手',
+    nameEn: 'Financial Trading Assistant',
+    description: '交易执行、持仓分析、新闻监控',
+    descriptionEn: 'Trading execution, position analysis, news monitoring',
+    icon: 'trending-up',
+  },
+  {
+    id: 'flight-booking',
+    name: '航空旅游数字员工',
+    nameEn: 'Aviation & Travel Digital Employee',
+    description: '订票改签、值机、客服处理',
+    descriptionEn: 'Ticket booking, check-in, customer service',
+    icon: 'plane',
+  },
+  {
+    id: 'retail-customer-service',
+    name: '餐饮零售智能客服',
+    nameEn: 'Food & Retail Smart Customer Service',
+    description: '订单处理、问题解决、客户服务',
+    descriptionEn: 'Order processing, problem solving, customer service',
+    icon: 'store',
+  },
+  {
+    id: 'manufacturing-qa',
+    name: '制造业质检员工',
+    nameEn: 'Manufacturing Quality Inspector',
+    description: '数据录入、报表生成、质检辅助',
+    descriptionEn: 'Data entry, report generation, quality inspection',
+    icon: 'factory',
+  },
+  {
+    id: 'smart-home',
+    name: '智能家居管家',
+    nameEn: 'Smart Home Butler',
+    description: '设备控制、环境调节、自动化场景',
+    descriptionEn: 'Device control, environment adjustment, automation',
+    icon: 'home',
+  },
+  {
+    id: 'hr-admin',
+    name: 'HR/行政文档处理员工',
+    nameEn: 'HR/Admin Document Processing',
+    description: '知识库管理、文档处理、流程自动化',
+    descriptionEn: 'Knowledge base, document processing, workflow automation',
+    icon: 'users',
   },
 ]
 
