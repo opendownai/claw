@@ -365,7 +365,7 @@ onMounted(() => {
   <div class="wizard">
     <div class="container wizard-container">
       <div class="wizard-header">
-        <h1 class="wizard-title">{{ t.deployDownclaw }}</h1>
+        <h1 class="wizard-title">{{ t.deployOpenclaw }}</h1>
         <p class="wizard-subtitle">{{ t.homeDescription }}</p>
       </div>
 

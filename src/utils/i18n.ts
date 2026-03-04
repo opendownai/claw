@@ -17,7 +17,7 @@ export interface Translations {
   multiChannelAccessDesc: string
   footerDownclaw: string
   footerLicense: string
-  deployDownclaw: string
+  deployOpenclaw: string
   deploySubtitle: string
   step: string
   discordSupport: string
@@ -88,21 +88,21 @@ export const translations: Record<Language, Translations> = {
   en: {
     discord: 'Discord',
     github: 'GitHub',
-    homeTitle: 'opendown.ai - DownClaw',
+    homeTitle: 'opendown.ai - OpenClaw Configurator',
     homeSubtitle: 'Open source personal AI assistant,\nruns locally, supports multiple messaging channels',
-    homeDescription: "Select purpose → Enter API Key → One-click install, 4 steps to complete",
-    oneClickDeploy: 'One-Click Deploy',
-    getStarted: 'Get Started',
-    whyChooseDownclaw: 'Why Choose DownClaw?',
+    homeDescription: "Select purpose → Choose channels → Configure API → Install, 4 simple steps",
+    oneClickDeploy: 'One-Click Deploy OpenClaw',
+    getStarted: 'Get Started with OpenClaw',
+    whyChooseDownclaw: 'Why Choose OpenClaw?',
     dataLocalStorage: 'Local Data Storage',
     dataLocalStorageDesc: 'Your data stays on your own computer',
-    oneClickInstall: 'One-Click Install',
+    oneClickInstall: 'One-Click Install OpenClaw',
     oneClickInstallDesc: '4 steps to complete, no configuration needed',
-    multiChannelAccess: 'Multi-Channel Access',
+    multiChannelAccess: 'Multi-Channel Access for OpenClaw',
     multiChannelAccessDesc: 'Supports Telegram, Discord and more',
-    footerDownclaw: 'DownClaw',
+    footerDownclaw: 'OpenClaw',
     footerLicense: 'MIT License',
-    deployDownclaw: 'Deploy DownClaw',
+    deployOpenclaw: 'Deploy OpenClaw',
     deploySubtitle: '4 steps to run your AI assistant on your computer',
     step: 'Step',
     discordSupport: 'Discord Support',
@@ -171,21 +171,21 @@ export const translations: Record<Language, Translations> = {
   zh: {
     discord: 'Discord',
     github: 'GitHub',
-    homeTitle: 'opendown.ai - DownClaw',
+    homeTitle: 'opendown.ai - OpenClaw 配置工具',
     homeSubtitle: '开源的个人 AI 助手，\n数据存在本地，支持多种消息渠道接入',
-    homeDescription: '选择用途 → 输入 API Key → 一键安装，4 步完成',
-    oneClickDeploy: '一键部署',
-    getStarted: '开始使用',
-    whyChooseDownclaw: '为什么选择 DownClaw？',
+    homeDescription: '选择用途 → 选择渠道 → 配置API → 开始安装，4步完成',
+    oneClickDeploy: '一键部署 OpenClaw',
+    getStarted: '开始使用 OpenClaw',
+    whyChooseDownclaw: '为什么选择 OpenClaw？',
     dataLocalStorage: '数据本地存储',
     dataLocalStorageDesc: '数据只在你自己的电脑上',
     oneClickInstall: '一键安装',
     oneClickInstallDesc: '4 步完成，无需配置',
     multiChannelAccess: '多渠道接入',
     multiChannelAccessDesc: '支持 Telegram、Discord 等',
-    footerDownclaw: 'DownClaw',
+    footerDownclaw: 'OpenClaw',
     footerLicense: 'MIT License',
-    deployDownclaw: '部署 DownClaw',
+    deployOpenclaw: '部署 OpenClaw',
     deploySubtitle: '4 步完成，在你的电脑上运行 AI 助手',
     step: '步骤',
     discordSupport: 'Discord 客服',
