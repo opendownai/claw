@@ -6,9 +6,6 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 
 <template>
   <div class="app">
-    <div class="bg-grid"></div>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
     <AppHeader />
     <main class="main-content">
       <RouterView />

@@ -181,12 +181,18 @@ function goToWizard() {
 }
 
 .hero-title {
-  font-family: 'Orbitron', 'Rajdhani', sans-serif;
   font-size: 42px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 16px;
-  letter-spacing: 0.08em;
+}
+
+.features-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .hero-subtitle {
@@ -277,7 +283,7 @@ function goToWizard() {
   width: 56px;
   height: 56px;
   margin: 0 auto 20px;
-  background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dim));
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dim));
   border-radius: 16px;
   display: flex;
   align-items: center;

@@ -46,13 +46,11 @@ const { t } = useI18nStore()
 }
 
 .header-link:hover {
-  color: var(--accent-green);
+  color: var(--accent-blue);
 }
 
 .header-title {
-  font-family: 'Orbitron', 'Rajdhani', sans-serif;
   font-size: 16px;
-  letter-spacing: 0.08em;
 }
 
 .icon {
