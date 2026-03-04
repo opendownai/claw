@@ -9,9 +9,8 @@ const { t } = useI18nStore()
   <header class="header">
     <div class="container header-content">
       <div class="header-left">
-        <a href="https://github.com/opendownai/claw" target="_blank" class="header-link">
-          <Github class="icon" />
-          <span>{{ t.github }}</span>
+        <a href="/" class="header-link">
+          <span>OpenClaw</span>
         </a>
       </div>
       <div class="header-right">
