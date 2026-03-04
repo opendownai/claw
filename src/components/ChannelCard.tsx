@@ -1,7 +1,10 @@
+'use client'
+
 import { useState } from 'react'
-import { ChannelConfig, ChannelOption } from '@/lib/channel-types'
+import { ChannelConfig, ChannelOption, getChannelOptionName, getChannelOptionDescription, getChannelConfigFieldLabel, getChannelConfigFieldPlaceholder } from '@/lib/channel-types'
 import { Check, Send, MessageSquare, Zap, MessageCircle, Globe, Eye, EyeOff, Play, Loader2, Info } from 'lucide-react'
 import { ChannelDebugger, DebugResult } from '@/lib/channel-debugger'
+import { useI18n } from '@/lib/i18n-context'
 
 interface ChannelCardProps {
   channel: ChannelConfig
@@ -20,6 +23,7 @@ export function ChannelCard({
   showDetails = true,
   onTestResult
 }: ChannelCardProps) {
+  const { t, isLanguageLoaded, language } = useI18n()
   const [isTesting, setIsTesting] = useState(false)
   const [testResult, setTestResult] = useState<DebugResult | null>(null)
   const [showGuide, setShowGuide] = useState(false)
@@ -43,7 +47,7 @@ export function ChannelCard({
     setTestResult(null)
     
     try {
-      const result = await ChannelDebugger.testChannel(channel)
+      const result = await ChannelDebugger.testChannel(channel, language)
       setTestResult(result)
       if (onTestResult) {
         onTestResult(channel.id, result)
@@ -59,7 +63,14 @@ export function ChannelCard({
     }
   }
 
-  const guideContent = ChannelDebugger.getSetupGuide(channel.id)
+  const guideContent = ChannelDebugger.getSetupGuide(channel.id, language)
+
+  if (!isLanguageLoaded) {
+    return null
+  }
+
+  const channelName = getChannelOptionName(channelOption, language)
+  const channelDesc = getChannelOptionDescription(channelOption, language)
 
   return (
     <div 
@@ -87,10 +98,10 @@ export function ChannelCard({
           </div>
           <div className="flex-1">
             <div className="font-medium text-[#1d1d1f]">
-              {channelOption.name}
+              {channelName}
             </div>
             <div className="text-xs text-[#6e6e73]">
-              {channelOption.description}
+              {channelDesc}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -143,7 +154,7 @@ export function ChannelCard({
       
       {showGuide && guideContent && (
         <div className="mt-3 p-3 rounded-lg bg-[#e5e5e7] text-sm text-[#1d1d1f]">
-          <div className="font-medium mb-1 text-[#0A84FF]">配置指南</div>
+          <div className="font-medium mb-1 text-[#0A84FF]">{t.setupGuide}</div>
           <div className="whitespace-pre-line">{guideContent}</div>
         </div>
       )}
@@ -153,12 +164,12 @@ export function ChannelCard({
           {channelOption.configFields.map(field => (
             <div key={field.name} className="space-y-1">
               <label className="text-xs text-[#86868b] flex items-center gap-1">
-                {field.label}{field.required && '*'}
+                {getChannelConfigFieldLabel(field, language)}{field.required && '*'}
                 {field.name === 'webhookUrl' && (
                   <span className="relative group">
                     <Eye className="w-3 h-3 text-[#aeaeb2]" />
                     <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-[#1d1d1f] text-white text-xs rounded px-2 py-1 w-48 z-10">
-                      请在消息渠道中创建机器人并获取Webhook URL
+                      {t.webhookUrlTooltip}
                     </span>
                   </span>
                 )}
@@ -167,7 +178,7 @@ export function ChannelCard({
                 type={field.type === 'password' ? 'password' : 'text'}
                 value={channel.config[field.name] || ''}
                 onChange={(e) => onConfigChange(channel.id, field.name, e.target.value)}
-                placeholder={field.placeholder}
+                placeholder={getChannelConfigFieldPlaceholder(field, language)}
                 className="w-full px-3 py-2 input-apple text-sm text-[#1d1d1f]"
               />
             </div>

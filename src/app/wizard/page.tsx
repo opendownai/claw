@@ -5,6 +5,8 @@ import { Sparkles, ShoppingBag, Megaphone, User, Code, BookOpen, Copy, Check, Ar
 import { ChannelManager } from '@/lib/channel-manager'
 import { ChannelConfig, channelOptions } from '@/lib/channel-types'
 import { ChannelCard } from '@/components/ChannelCard'
+import { useI18n } from '@/lib/i18n-context'
+import { getMiniMaxRegion } from '@/lib/minimax-region'
 
 const iconMap: Record<string, any> = {
   'shopping-bag': ShoppingBag,
@@ -25,51 +27,63 @@ function getOS(): 'mac' | 'windows' | 'linux' {
 interface Scenario {
   id: string
   name: string
+  nameEn: string
   description: string
+  descriptionEn: string
   icon: string
   scenario_skills?: { skill_name: string }[]
 }
 
-// 本地场景数据
 const localScenarios: Scenario[] = [
   {
     id: 'ecommerce',
     name: '电商运营',
+    nameEn: 'E-commerce',
     description: '处理订单、客服咨询、商品上架',
+    descriptionEn: 'Handle orders, customer service, product listings',
     icon: 'shopping-bag',
     scenario_skills: []
   },
   {
     id: 'social-media',
     name: '社交媒体运营',
+    nameEn: 'Social Media',
     description: '内容创作、发帖，分析数据',
+    descriptionEn: 'Content creation, posting, data analysis',
     icon: 'megaphone',
     scenario_skills: []
   },
   {
     id: 'personal-assistant',
     name: '个人助理',
+    nameEn: 'Personal Assistant',
     description: '日程管理、提醒，信息整理',
+    descriptionEn: 'Schedule management, reminders, info organization',
     icon: 'user',
     scenario_skills: []
   },
   {
     id: 'developer',
     name: '开发助手',
+    nameEn: 'Developer',
     description: '代码编写、调试、Code Review',
+    descriptionEn: 'Code writing, debugging, code review',
     icon: 'code',
     scenario_skills: []
   },
   {
     id: 'researcher',
     name: '研究助手',
+    nameEn: 'Researcher',
     description: '文献检索、总结，分析',
+    descriptionEn: 'Literature search, summarization, analysis',
     icon: 'book-open',
     scenario_skills: []
   }
 ]
 
 export default function WizardPage() {
+  const { t, isLanguageLoaded, language } = useI18n()
   const [step, setStep] = useState(1)
   const [scenarios, setScenarios] = useState<Scenario[]>([])
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null)
@@ -80,54 +94,81 @@ export default function WizardPage() {
   const [loading, setLoading] = useState(true)
   const [channels, setChannels] = useState<ChannelConfig[]>([])
 
+  const miniMaxRegion = getMiniMaxRegion(language)
+
   useEffect(() => {
     setOs(getOS())
-    setScenarios(localScenarios)
+    const localizedScenarios = localScenarios.map(s => ({
+      ...s,
+      name: language === 'zh' ? s.name : s.nameEn,
+      description: language === 'zh' ? s.description : s.descriptionEn
+    }))
+    setScenarios(localizedScenarios)
     const initialChannels: ChannelConfig[] = channelOptions.map(option => ({
       id: option.id,
       name: option.name,
+      nameEn: option.nameEn,
       icon: option.icon,
       enabled: option.id === 'web',
       config: option.id === 'web' ? {} : {}
     }))
     setChannels(initialChannels)
     setLoading(false)
-  }, [])
+  }, [language])
 
   const getInstallScript = () => {
       if (!selectedScenario || !apiKey) return ''
 
       const skills = selectedScenario.scenario_skills?.map(s => s.skill_name) || []
 
-      // 使用ChannelManager生成配置
       const channelManager = new ChannelManager(channels)
       const configJson = channelManager.generateConfigWithChannels(apiKey, selectedScenario)
 
       const skillsLines = skills.map(skill => `npx openclaw skills install ${skill}`).join('\n')
 
+      const scriptLabels = language === 'zh' 
+        ? {
+            step1: '第1步', step2: '第2步', step3: '第3步', step4: '第4步', step5: '第5步',
+            checkEnv: '检查环境', installOpenClaw: '安装 OpenClaw', installSkills: '安装 Skills',
+            start: '启动服务', createConfig: '创建配置',
+            nodeNotFound: '未检测到 Node.js', installNode: '正在通过 Homebrew 安装...',
+            errorBrew: '错误: 请先安装 Homebrew', brewInstall: '访问 https://brew.sh 按照说明安装',
+            nodeVersion: 'Node.js 版本:', installComplete: '安装完成！请在浏览器中打开',
+            openBrowser: '请手动打开'
+          }
+        : {
+            step1: 'Step 1', step2: 'Step 2', step3: 'Step 3', step4: 'Step 4', step5: 'Step 5',
+            checkEnv: 'Check environment', installOpenClaw: 'Install OpenClaw', installSkills: 'Install Skills',
+            start: 'Start service', createConfig: 'Create config',
+            nodeNotFound: 'Node.js not detected', installNode: 'Installing via Homebrew...',
+            errorBrew: 'Error: Please install Homebrew first', brewInstall: 'Visit https://brew.sh for installation instructions',
+            nodeVersion: 'Node.js version:', installComplete: 'Installation complete! Please open in browser',
+            openBrowser: 'Please open manually'
+          }
+
       if (os === 'windows') {
         return `mkdir -Force %USERPROFILE%\\.openclaw
 echo ${configJson.replace(/\r?\n/g, ' ').replace(/"/g, '\\"')}> %USERPROFILE%\\.openclaw\\openclaw.json
 
-echo 检查 Node.js...
+echo ${scriptLabels.checkEnv}...
 where node >nul 2>nul
-if %ERRORLEVEL% NEQ 0 (echo 请先安装 Node.js: https://nodejs.org)
+if %ERRORLEVEL% NEQ 0 (echo Please install Node.js first: https://nodejs.org)
 
-echo 安装 OpenClaw...
+echo ${scriptLabels.installOpenClaw}...
 npm install -g openclaw@latest
 
-echo 安装 Skills...
+echo ${scriptLabels.step4} ${scriptLabels.installSkills}...
 ${skillsLines}
 
-echo 启动服务...
+echo ${scriptLabels.step5} ${scriptLabels.start}...
 start cmd /k "openclaw gateway --port 18789"
 start http://127.0.0.1:18789
-echo 完成！打开 http://127.0.0.1:18789
+echo ${scriptLabels.installComplete} http://127.0.0.1:18789
 pause`
       }
 
       return `#!/bin/bash
-echo "====== 第1步: 创建配置 ======"
+echo "====== ${scriptLabels.step1}: ${scriptLabels.createConfig} ======"
 mkdir -p ~/.openclaw
 
 cat > ~/.openclaw/openclaw.json << 'EOFCONFIG'
@@ -135,39 +176,39 @@ ${configJson}
 EOFCONFIG
 
 echo ""
-echo "====== 第2步: 检查环境 ======"
+echo "====== ${scriptLabels.step2}: ${scriptLabels.checkEnv} ======"
 if ! command -v node &> /dev/null; then
-    echo "未检测到 Node.js"
+    echo "${scriptLabels.nodeNotFound}"
     if [[ "$OSTYPE" == "darwin"* ]]; then
         if command -v brew &> /dev/null; then
-            echo "正在通过 Homebrew 安装..."
+            echo "${scriptLabels.installNode}"
             brew install node
         else
-            echo "错误: 请先安装 Homebrew"
-            echo "访问 https://brew.sh 按照说明安装"
+            echo "${scriptLabels.errorBrew}"
+            echo "${scriptLabels.brewInstall}"
             exit 1
         fi
     fi
 fi
-echo "Node.js 版本: $(node -v)"
+echo "${scriptLabels.nodeVersion} $(node -v)"
 
 echo ""
-echo "====== 第3步: 安装 OpenClaw ======"
+echo "====== ${scriptLabels.step3}: ${scriptLabels.installOpenClaw} ======"
 npm install -g openclaw@latest
 
 echo ""
-echo "====== 第4步: 安装 Skills ======"
+echo "====== ${scriptLabels.step4}: ${scriptLabels.installSkills} ======"
 ${skillsLines}
 
 echo ""
-echo "====== 第5步: 启动服务 ======"
+echo "====== ${scriptLabels.step5}: ${scriptLabels.start} ======"
 openclaw gateway --port 18789 &
 sleep 5
-open http://127.0.0.1:18789 2>/dev/null || echo "请手动打开 http://127.0.0.1:18789"
+open http://127.0.0.1:18789 2>/dev/null || echo "${scriptLabels.openBrowser} http://127.0.0.1:18789"
 
 echo ""
 echo "=========================================="
-echo "  安装完成！请在浏览器中打开"
+echo "  ${scriptLabels.installComplete}"
 echo "  http://127.0.0.1:18789"
 echo "=========================================="
 read`
@@ -179,7 +220,7 @@ read`
     setTimeout(() => setCopied(false), 2000)
   }
 
-  if (loading) {
+  if (loading || !isLanguageLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
         <Loader2 className="w-8 h-8 animate-spin text-[#0A84FF]" />
@@ -191,8 +232,8 @@ read`
     <div className="min-h-screen py-8 px-4 bg-[#f5f5f7] text-[#1d1d1f]">
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-semibold mb-1 text-[#1d1d1f]">部署 DownClaw</h1>
-          <p className="text-[#86868b] text-sm">4 步完成，在你的电脑上运行 AI 助手</p>
+          <h1 className="text-2xl font-semibold mb-1 text-[#1d1d1f]">{t.deployDownclaw}</h1>
+          <p className="text-[#86868b] text-sm">{t.deploySubtitle}</p>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -216,36 +257,36 @@ read`
             className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[#e5e5e7] hover:bg-[#d2d2d7] rounded-full text-[#1d1d1f] transition-colors"
           >
             <MessageCircle className="w-4 h-4" />
-            Discord 客服
+            {t.discordSupport}
           </a>
           <button
             onClick={() => setShowHelp(!showHelp)}
             className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[#e5e5e7] hover:bg-[#d2d2d7] rounded-full text-[#1d1d1f] transition-colors"
           >
             <HelpCircle className="w-4 h-4" />
-            常见问题
+            {t.faq}
           </button>
         </div>
 
         {showHelp && (
           <div className="mb-6 p-4 card-apple rounded-2xl text-sm text-[#6e6e73] space-y-3">
-            <p><strong className="text-[#1d1d1f]">Q: 提示找不到 Node.js 怎么办？</strong><br/>
-            A: 访问 <a href="https://nodejs.org" className="text-[#0A84FF] hover:underline">nodejs.org</a> 下载安装后重新运行脚本</p>
+            <p><strong className="text-[#1d1d1f]">{t.faqNodeTitle}</strong><br/>
+            {t.faqNodeAnswer}</p>
             
-            <p><strong className="text-[#1d1d1f]">Q: Mac 提示没有 brew 怎么办？</strong><br/>
-            A: 打开终端，粘贴运行以下命令安装 brew：</p>
+            <p><strong className="text-[#1d1d1f]">{t.faqBrewTitle}</strong><br/>
+            {t.faqBrewAnswer}</p>
             <code className="block bg-[#e5e5e7] px-3 py-2 rounded-lg text-xs text-[#1d1d1f] break-all font-mono">
-              /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+              /bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
             </code>
             
-            <p><strong className="text-[#1d1d1f]">Q: 安装失败怎么办？</strong><br/>
-            A: 加入 Discord 群，截图发给我们帮你排查</p>
+            <p><strong className="text-[#1d1d1f]">{t.faqInstallFailedTitle}</strong><br/>
+            {t.faqInstallFailedAnswer}</p>
           </div>
         )}
 
         {step === 1 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">选择你的用途</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.selectPurpose}</h2>
             <div className="grid grid-cols-2 gap-3">
               {scenarios.map((scenario) => {
                 const Icon = iconMap[scenario.icon] || Sparkles
@@ -268,17 +309,17 @@ read`
         {step === 2 && (
           <div className="space-y-4">
             <button onClick={() => setStep(1)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              ← 返回选择
+              {t.backToSelect}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">输入 MiniMax API Key</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.inputMinimaxApiKey}</h2>
             
             <div className="bg-[#fff9e6] border border-[#ffd60a]/30 rounded-2xl p-3">
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-5 h-5 text-[#ff9f0a] flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-[#1d1d1f]">
-                  <p className="font-medium mb-1">💡 强烈建议购买 Coding Plan</p>
+                  <p className="font-medium mb-1">&quot;{t.codingPlanRecommended}&quot;</p>
                   <p className="text-[#86868b] text-xs">
-                    虽然有赠送余额，但不够稳定。Coding Plan 每月仅需 ¥29 起，用量更充足。
+                    {t.codingPlanDesc}
                   </p>
                 </div>
               </div>
@@ -289,11 +330,11 @@ read`
                 type="password"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                placeholder="sk-xxx..."
+                placeholder={t.apiKeyPlaceholder}
                 className="w-full px-4 py-3 input-apple text-[#1d1d1f]"
               />
               <p className="text-xs text-[#86868b] mt-2">
-                获取地址：<a href="https://platform.minimaxi.com/user-center/basic-information" target="_blank" rel="noopener noreferrer" className="text-[#0A84FF] hover:underline">platform.minimaxi.com</a>
+                {t.apiKeyHint}<a href={miniMaxRegion.platformUrl} target="_blank" rel="noopener noreferrer" className="text-[#0A84FF] hover:underline">{language === 'zh' ? 'platform.minimaxi.com' : 'platform.minimax.io'}</a>
               </p>
             </div>
             <button
@@ -301,7 +342,7 @@ read`
               disabled={!apiKey}
               className="w-full flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50"
             >
-              下一步 <ArrowRight className="w-4 h-4" />
+              {t.nextStep} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -309,11 +350,11 @@ read`
         {step === 3 && (
           <div className="space-y-4">
             <button onClick={() => setStep(2)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              ← 返回
+              {t.backToChannels}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">配置消息渠道</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.configureChannels}</h2>
             <p className="text-[#86868b] text-sm mb-4">
-              选择你想要接入的平台，配置后 AI 助手可以在这些渠道接收和发送消息
+              {t.channelDesc}
             </p>
             
             <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
@@ -350,7 +391,6 @@ read`
                     }}
                     showDetails={true}
                     onTestResult={(channelId, result) => {
-                      // 可以在这里添加测试结果的处理逻辑
                       console.log(`Channel ${channelId} test result:`, result)
                     }}
                   />
@@ -360,7 +400,7 @@ read`
             
             <div className="pt-4">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                提示：Web界面默认已启用，您可以在浏览器中直接使用 AI 助手
+                {t.channelTip}
               </div>
               <div className="flex gap-3">
                 <button
@@ -368,14 +408,14 @@ read`
                   onClick={() => setStep(4)}
                   className="flex-1 flex items-center justify-center gap-2 py-3 btn-apple rounded-xl transition-all"
                 >
-                  跳过此步
+                  {t.skipThisStep}
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep(4)}
                   className="flex-1 flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg"
                 >
-                  下一步 <ArrowRight className="w-4 h-4" />
+                  {t.nextStep} <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -385,26 +425,26 @@ read`
         {step === 4 && (
           <div className="space-y-4">
             <button onClick={() => setStep(3)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              ← 返回
+              {t.backToChannels}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">开始安装</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.startInstall}</h2>
             
             <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm">
               <div className="flex items-center gap-3 text-sm">
                 <span className="w-6 h-6 rounded-full bg-[#0A84FF] text-white text-xs flex items-center justify-center">1</span>
-                <span>复制下方命令</span>
+                <span>{t.step1Copy}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <span className="w-6 h-6 rounded-full bg-[#0A84FF] text-white text-xs flex items-center justify-center">2</span>
-                <span>打开终端（Mac: ⌘+空格 搜索 Terminal）</span>
+                <span>{t.step2Terminal}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <span className="w-6 h-6 rounded-full bg-[#0A84FF] text-white text-xs flex items-center justify-center">3</span>
-                <span>粘贴命令，回车运行</span>
+                <span>{t.step3Run}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <span className="w-6 h-6 rounded-full bg-[#34C759] text-white text-xs flex items-center justify-center">✓</span>
-                <span>等待完成，自动打开浏览器</span>
+                <span>{t.step4Wait}</span>
               </div>
             </div>
 
@@ -414,12 +454,12 @@ read`
               className="w-full flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50"
             >
               {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-              {copied ? '已复制！' : '复制安装命令'}
+              {copied ? t.copied : t.copyCommand}
             </button>
 
             <div className="text-center text-[#86868b] text-xs space-y-1">
-              <p>运行后会自动完成所有配置</p>
-              <p>然后打开 <span className="text-[#1d1d1f] font-medium">http://127.0.0.1:18789</span></p>
+              <p>{t.copyAndRun}</p>
+              <p>{t.autoOpenBrowser} <span className="text-[#1d1d1f] font-medium">http://127.0.0.1:18789</span></p>
             </div>
           </div>
         )}

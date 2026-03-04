@@ -11,6 +11,7 @@ export class ChannelManager {
       this.channels = channelOptions.map(option => ({
         id: option.id,
         name: option.name,
+        nameEn: option.nameEn,
         icon: option.icon,
         enabled: false,
         config: {}
