@@ -532,7 +532,7 @@ open http://127.0.0.1:18789
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold mb-1 text-[#1d1d1f]">{t.deployDownclaw}</h1>
-          <p className="text-[#86868b] text-sm">{language === 'zh' ? '4步完成部署：选择用途 → 选择渠道 → 配置API → 一键安装' : '4-step deployment: Choose Purpose → Select Channels → Configure API → One-Click Install'}</p>
+          <p className="text-[#86868b] text-sm">{t.homeDescription}</p>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -584,7 +584,7 @@ open http://127.0.0.1:18789
 
         {step === 1 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.selectPurpose}</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step1Title}</h2>
             <div className="grid grid-cols-2 gap-3">
               {scenarios.map((scenario) => {
                 const Icon = iconMap[scenario.icon] || Sparkles
@@ -673,9 +673,9 @@ open http://127.0.0.1:18789
         {step === 2 && (
           <div className="space-y-4">
             <button onClick={() => setStep(1)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              {language === 'zh' ? '返回' : 'Back'}
+              {t.backToSelect}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">{language === 'zh' ? '选择渠道' : 'Select Channels'}</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step2Title}</h2>
             <div className="space-y-3">
               {channelOptions.map((option) => (
                 <ChannelCard
@@ -724,16 +724,16 @@ open http://127.0.0.1:18789
         {step === 3 && (
           <div className="space-y-4">
             <button onClick={() => setStep(2)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              {language === 'zh' ? '返回' : 'Back'}
+              {t.backToSelect}
             </button>
-             <h2 className="text-lg font-semibold text-[#1d1d1f]">{language === 'zh' ? '配置API密钥' : 'Configure API Key'}</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step3Title}</h2>
              
             <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm mb-4">
               <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-sm">MiniMax</h3>
+                <h3 className="font-medium text-sm">{t.apiProviderMiniMax}</h3>
                 <div className="flex items-center">
                   <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                  <span className="text-xs text-gray-500">{language === 'zh' ? '推荐' : 'Recommended'}</span>
+                  <span className="text-xs text-gray-500">{t.codingPlanRecommended.replace('💡 ', '')}</span>
                 </div>
               </div>
               
@@ -753,7 +753,7 @@ open http://127.0.0.1:18789
             
             <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm mb-4">
               <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-sm">阿里云百炼</h3>
+                <h3 className="font-medium text-sm">{t.apiProviderAliyun}</h3>
                 <div className="flex items-center">
                   <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
                   <span className="text-xs text-gray-500">{language === 'zh' ? '可选' : 'Optional'}</span>
@@ -784,7 +784,7 @@ open http://127.0.0.1:18789
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  MiniMax
+                  {t.apiProviderMiniMax}
                 </button>
                 <button
                   onClick={() => setApiKeyProvider('aliyun')}
@@ -794,28 +794,24 @@ open http://127.0.0.1:18789
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  阿里云
+                  {t.apiProviderAliyun}
                 </button>
               </div>
               
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                {apiKeyProvider === 'minimax'
-                  ? (language === 'zh' ? '输入您的MiniMax API密钥' : 'Enter your MiniMax API key')
-                  : (language === 'zh' ? '输入您的阿里云百炼API密钥' : 'Enter your Alibaba Cloud Bailian API key')}
+                {apiKeyProvider === 'minimax' ? t.inputMinimaxApiKey : t.apiProviderAliyun + ' API ' + (language === 'zh' ? '密钥' : 'Key')}
               </div>
               <input
                 type="password"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder={apiKeyProvider === 'minimax' 
-                  ? (language === 'zh' ? 'sk-xxx...' : 'sk-xxx...') 
-                  : (language === 'zh' ? '阿里云API密钥...' : 'Alibaba Cloud API Key...')}
+                  ? t.apiKeyPlaceholder 
+                  : t.apiProviderAliyun + ' API ' + (language === 'zh' ? '密钥...' : 'Key...')}
                 className="w-full px-4 py-3 bg-white border border-[#d2d2d7] rounded-xl focus:outline-none focus:border-[#0A84FF] text-sm"
               />
               <div className="text-xs text-orange-500">
-                {language === 'zh' 
-                  ? '安全提示：API密钥仅在本地使用，不会上传到任何服务器' 
-                  : 'Security Note: API keys are used locally and not uploaded to any server'}
+                {t.securityNote}
               </div>
               <button
                 onClick={() => setStep(4)}
@@ -831,9 +827,9 @@ open http://127.0.0.1:18789
         {step === 4 && (
           <div className="space-y-4">
             <button onClick={() => setStep(3)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              {language === 'zh' ? '返回' : 'Back'}
+              {t.backToSelect}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">{language === 'zh' ? '开始安装' : 'Start Install'}</h2>
+            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step4Title}</h2>
             
             <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm">
               <div className="flex items-center gap-3 text-sm">

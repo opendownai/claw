@@ -49,7 +49,7 @@ export interface Translations {
   researcher: string
   researcherDesc: string
   
-  // Step 2 - API Key
+   // Step 2 - API Key
   backToSelect: string
   inputMinimaxApiKey: string
   apiKeyHint: string
@@ -57,6 +57,15 @@ export interface Translations {
   codingPlanRecommended: string
   codingPlanDesc: string
   nextStep: string
+  securityNote: string
+  apiProviderMiniMax: string
+  apiProviderAliyun: string
+  aliyunRecommended: string
+  aliyunDesc: string
+  step1Title: string
+  step2Title: string
+  step3Title: string
+  step4Title: string
   
   // Step 3 - Channels
   configureChannels: string
@@ -177,6 +186,15 @@ export const translations: Record<Language, Translations> = {
     codingPlanRecommended: '💡 Coding Plan Recommended',
     codingPlanDesc: 'While there is free credit, it may not be stable enough. Coding Plan starts at $5/month with more quota.',
     nextStep: 'Next',
+    securityNote: 'Security Note: API keys are used locally and not uploaded to any server',
+    apiProviderMiniMax: 'MiniMax',
+    apiProviderAliyun: 'Alibaba Cloud',
+    aliyunRecommended: '💡 Coding Plan Recommended',
+    aliyunDesc: 'Access Qwen models via Alibaba Cloud Bailian Coding Plan API.',
+    step1Title: 'Select Purpose',
+    step2Title: 'Select Channels',
+    step3Title: 'Configure API Key',
+    step4Title: 'Start Install',
     
     configureChannels: 'Configure Message Channels',
     channelDesc: 'Select platforms you want to integrate. The AI assistant can receive and send messages on these channels.',
@@ -298,6 +316,15 @@ export const translations: Record<Language, Translations> = {
     codingPlanRecommended: '💡 强烈建议购买 Coding Plan',
     codingPlanDesc: '虽然有赠送余额，但不够稳定。Coding Plan 每月仅需 $5 起，用量更充足。',
     nextStep: '下一步',
+    securityNote: '安全提示：API密钥仅在本地使用，不会上传到任何服务器',
+    apiProviderMiniMax: 'MiniMax',
+    apiProviderAliyun: '阿里云',
+    aliyunRecommended: '💡 推荐使用Coding Plan',
+    aliyunDesc: '通过阿里云百炼Coding Plan API访问通义千问系列模型。',
+    step1Title: '选择用途',
+    step2Title: '选择渠道',
+    step3Title: '配置API密钥',
+    step4Title: '开始安装',
     
     configureChannels: '配置消息渠道',
     channelDesc: '选择你想要接入的平台，配置后 AI 助手可以在这些渠道接收和发送消息',
