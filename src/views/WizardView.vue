@@ -244,17 +244,6 @@ function selectScenario(scenario: Scenario) {
   step.value = 2
 }
 
-function skipStep1() {
-  if (!selectedScenario.value) {
-    selectedScenario.value = scenarios[0]
-  }
-  step.value = 2
-}
-
-function skipStep2() {
-  step.value = 4
-}
-
 function handleChannelToggle(id: string, enabled: boolean) {
   channelManager.value.toggleChannel(id, enabled)
   channels.value = channelManager.value.getAllChannels()
@@ -345,15 +334,6 @@ onMounted(() => {
         </div>
         
         <div class="step-tip">{{ t.channelTip }}</div>
-        
-        <div class="step-actions">
-          <button @click="skipStep1" class="btn btn-secondary">
-            {{ t.skipThisStep }}
-          </button>
-          <button @click="step = 2" class="btn btn-primary">
-            {{ t.nextStep }} <ArrowRight class="btn-icon" />
-          </button>
-        </div>
       </div>
 
       <!-- Step 2: Select Channels -->
@@ -373,9 +353,6 @@ onMounted(() => {
         </div>
         
         <div class="step-actions">
-          <button @click="skipStep2" class="btn btn-secondary">
-            {{ t.skipThisStep }}
-          </button>
           <button @click="step = 3" class="btn btn-primary">
             {{ t.nextStep }} <ArrowRight class="btn-icon" />
           </button>
