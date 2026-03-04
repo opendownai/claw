@@ -38,7 +38,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/wizard"
-                className="inline-flex items-center gap-2 px-6 py-3 btn-primary-apple text-white rounded-xl font-medium flex-1 justify-center shadow-md hover:shadow-lg transition-shadow"
+                className="inline-flex items-center gap-2 px-6 py-3 btn-primary-apple text-white rounded-xl font-medium flex-1 justify-center shadow-md hover:shadow-lg transition-shadow whitespace-nowrap"
               >
                 <Download className="w-5 h-5" />
                 {t.oneClickDeploy}
@@ -48,7 +48,7 @@ export default function HomePage() {
                 href="https://github.com/opendownai/claw"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 btn-apple rounded-xl transition-all flex-1 justify-center"
+                className="inline-flex items-center gap-2 px-5 py-3 btn-apple rounded-xl transition-all flex-1 justify-center whitespace-nowrap"
               >
                 <Github className="w-5 h-5" />
                 {t.github}
