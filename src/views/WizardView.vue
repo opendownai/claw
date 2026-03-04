@@ -14,6 +14,61 @@ import ChannelCard from '@/components/wizard/ChannelCard.vue'
 const { t } = useI18nStore()
 const { language } = storeToRefs(useI18nStore())
 
+interface Provider {
+  id: 'minimax' | 'aliyun' | 'iflow'
+  name: string
+  nameEn: string
+  description: string
+  descriptionEn: string
+  consoleUrl: string
+  apiKeyLabel: string
+  apiKeyPlaceholder: string
+  recommended?: boolean
+}
+
+const providers: Provider[] = [
+  {
+    id: 'minimax',
+    name: 'MiniMax',
+    nameEn: 'MiniMax',
+    description: '支持 MiniMax-M2.5 模型，适合中文场景',
+    descriptionEn: 'Supports MiniMax-M2.5 model, suitable for Chinese scenarios',
+    consoleUrl: 'https://platform.minimaxi.com',
+    apiKeyLabel: 'MiniMax API Key',
+    apiKeyPlaceholder: 'sk-xxx...',
+    recommended: true
+  },
+  {
+    id: 'aliyun',
+    name: '阿里云百炼',
+    nameEn: 'Alibaba Cloud',
+    description: '支持通义千问 Qwen3 系列模型',
+    descriptionEn: 'Supports Qwen3 series models',
+    consoleUrl: 'https://bailian.console.aliyun.com',
+    apiKeyLabel: '阿里云百炼 API Key',
+    apiKeyPlaceholder: 'sk-xxx...'
+  },
+  {
+    id: 'iflow',
+    name: '心流 (iFlow)',
+    nameEn: 'iFlow',
+    description: '支持 DeepSeek、Qwen3、GPT-4o、Claude 等多种模型',
+    descriptionEn: 'Supports DeepSeek, Qwen3, GPT-4o, Claude and more',
+    consoleUrl: 'https://platform.iflow.cn/profile?tab=apiKey',
+    apiKeyLabel: '心流 API Key',
+    apiKeyPlaceholder: 'iflow_xxx...'
+  }
+]
+
+const selectedProvider = computed(() => {
+  return providers.find(p => p.id === apiKeyProvider.value)
+})
+
+function selectProvider(id: Provider['id']) {
+  apiKeyProvider.value = id
+  apiKey.value = ''
+}
+
 const step = ref(1)
 const selectedScenario = ref<Scenario | null>(null)
 const apiKey = ref('')
@@ -392,83 +447,41 @@ onMounted(() => {
         <button @click="step = 2" class="back-btn">{{ t.backToChannels }}</button>
         <h2 class="step-title">{{ t.step3Title }}</h2>
         
-        <div class="api-providers">
-          <div class="provider-card card-apple">
-            <div class="provider-header">
-              <h3>{{ t.apiProviderMiniMax }}</h3>
-              <span class="provider-badge">Recommended</span>
-            </div>
+        <div class="provider-tabs">
+          <button 
+            v-for="provider in providers" 
+            :key="provider.id"
+            @click="selectProvider(provider.id)"
+            class="provider-tab"
+            :class="{ active: apiKeyProvider === provider.id }"
+          >
+            <span class="provider-tab-name">{{ language === 'zh' ? provider.name : provider.nameEn }}</span>
+            <span v-if="provider.recommended" class="provider-tab-badge">Recommended</span>
+          </button>
+        </div>
+
+        <div class="provider-config">
+          <div class="provider-info">
+            <p class="provider-desc">{{ language === 'zh' ? selectedProvider?.description : selectedProvider?.descriptionEn }}</p>
             <a 
-              href="https://platform.minimaxi.com" 
+              :href="selectedProvider?.consoleUrl" 
               target="_blank" 
-              class="provider-link"
+              class="provider-console-link"
             >
-              {{ language === 'zh' ? '跳转到MiniMax控制台' : 'Go to MiniMax Console' }}
+              {{ language === 'zh' ? '获取 API Key →' : 'Get API Key →' }}
             </a>
           </div>
           
-          <div class="provider-card card-apple">
-            <div class="provider-header">
-              <h3>{{ t.apiProviderAliyun }}</h3>
-            </div>
-            <a 
-              href="https://bailian.console.aliyun.com" 
-              target="_blank" 
-              class="provider-link"
-            >
-              {{ language === 'zh' ? '跳转到阿里云百炼' : 'Go to Alibaba Cloud Bailian' }}
-            </a>
+          <div class="api-input-section">
+            <label class="input-label">{{ selectedProvider?.apiKeyLabel }}</label>
+            <input
+              v-model="apiKey"
+              type="password"
+              class="api-input"
+              :placeholder="selectedProvider?.apiKeyPlaceholder"
+            />
+            <p class="security-note">{{ t.securityNote }}</p>
           </div>
-
-          <div class="provider-card card-apple">
-            <div class="provider-header">
-              <h3>心流 (iFlow)</h3>
-            </div>
-            <a 
-              href="https://platform.iflow.cn/profile?tab=apiKey" 
-              target="_blank" 
-              class="provider-link"
-            >
-              {{ language === 'zh' ? '跳转到心流控制台' : 'Go to iFlow Console' }}
-            </a>
-          </div>
-        </div>
-
-        <div class="provider-selector">
-          <button 
-            @click="apiKeyProvider = 'minimax'"
-            class="selector-btn"
-            :class="{ active: apiKeyProvider === 'minimax' }"
-          >
-            {{ t.apiProviderMiniMax }}
-          </button>
-          <button 
-            @click="apiKeyProvider = 'aliyun'"
-            class="selector-btn"
-            :class="{ active: apiKeyProvider === 'aliyun' }"
-          >
-            {{ t.apiProviderAliyun }}
-          </button>
-          <button 
-            @click="apiKeyProvider = 'iflow'"
-            class="selector-btn"
-            :class="{ active: apiKeyProvider === 'iflow' }"
-          >
-            心流 (iFlow)
-          </button>
-        </div>
-
-        <div class="api-input-section">
-          <label class="input-label">
-            {{ apiKeyProvider === 'minimax' ? t.inputMinimaxApiKey : apiKeyProvider === 'aliyun' ? t.apiProviderAliyun : '心流 API Key' }}
-          </label>
-          <input
-            v-model="apiKey"
-            type="password"
-            class="api-input"
-            :placeholder="apiKeyProvider === 'iflow' ? 'iflow_xxx...' : t.apiKeyPlaceholder"
-          />
-          <p class="security-note">{{ t.securityNote }}</p>
         </div>
         
         <div class="step-actions">
@@ -814,28 +827,80 @@ onMounted(() => {
   background: #0A74E0;
 }
 
-.provider-selector {
+.provider-tabs {
   display: flex;
   gap: 8px;
   margin-bottom: 20px;
 }
 
-.selector-btn {
+.provider-tab {
   flex: 1;
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 12px;
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
   color: var(--text-secondary);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.selector-btn.active {
-  background: var(--accent-blue);
+.provider-tab:hover {
+  border-color: var(--text-tertiary);
+}
+
+.provider-tab.active {
   border-color: var(--accent-blue);
+  background: rgba(10, 132, 255, 0.05);
+}
+
+.provider-tab-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.provider-tab-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--accent-green);
   color: white;
+  border-radius: 100px;
+}
+
+.provider-config {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.provider-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.provider-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.provider-console-link {
+  font-size: 14px;
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.provider-console-link:hover {
+  text-decoration: underline;
 }
 
 .api-input-section {
