@@ -88,7 +88,7 @@ export const translations: Record<Language, Translations> = {
   en: {
     discord: 'Discord',
     github: 'GitHub',
-    homeTitle: 'opendown.ai - OpenClaw Configurator',
+    homeTitle: 'We are on the verge of the Singularity — OpenClaw',
     homeSubtitle: 'Open source personal AI assistant,\nruns locally, supports multiple messaging channels',
     homeDescription: "Select purpose → Choose channels → Configure API → Install, 4 simple steps",
     oneClickDeploy: 'One-Click Deploy OpenClaw',
@@ -171,7 +171,7 @@ export const translations: Record<Language, Translations> = {
   zh: {
     discord: 'Discord',
     github: 'GitHub',
-    homeTitle: 'opendown.ai - OpenClaw 配置工具',
+    homeTitle: 'We are on the verge of the Singularity — OpenClaw',
     homeSubtitle: '开源的个人 AI 助手，\n数据存在本地，支持多种消息渠道接入',
     homeDescription: '选择用途 → 选择渠道 → 配置API → 开始安装，4步完成',
     oneClickDeploy: '一键部署 OpenClaw',
