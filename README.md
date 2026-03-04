@@ -15,7 +15,7 @@
 
 - **One-Click Installation**: Designed for non-technical users - no coding knowledge required
 - **Local Deployment**: Optimized for local installation to handle files, calendars, and personal data
-- **Multi-Provider AI Models**: Support for MiniMax and Alibaba Cloud Bailian Coding Plan
+- **Multi-Provider AI Models**: Support for MiniMax, Alibaba Cloud Bailian Coding Plan, and iFlow
 - **Industry-Specific Templates**: Professionally designed templates for 10+ industries and use cases
 - **Multi-Cloud Deployments**: One-click deploy to Aliyun FC, Tencent Cloud, Railway, Zeabur, and more
 - **Template System**: Start with pre-built templates or create your own
@@ -30,6 +30,7 @@ claw supports multiple AI model providers:
 - **Alibaba Cloud Bailian**: Qwen series models (qwen3-max, qwen3-coder-plus)
   - Access Coding Plan API at: [阿里云百炼 Coding Plan](https://bailian.console.aliyun.com/cn-beijing/?tab=coding-plan#/efm/detail)
   - Support for multiple Qwen models optimized for different tasks
+- **iFlow**: Advanced AI models with enhanced capabilities
 
 ## Industry Templates
 
@@ -75,6 +76,9 @@ During the setup wizard, you can choose between different AI model providers:
 2. **Alibaba Cloud Bailian** (Optional)
    - Access Coding Plan at [阿里云百炼](https://bailian.console.aliyun.com/cn-beijing/?tab=coding-plan#/efm/detail)
    - Get your API key for Qwen series models
+
+3. **iFlow** (Optional)
+   - Enhanced AI model provider with additional capabilities
 
 ## Deployment
 
