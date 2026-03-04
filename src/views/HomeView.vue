@@ -60,7 +60,7 @@ function goToWizard() {
           </div>
           <div class="feature-card card-apple">
             <div class="feature-icon">
-              <Zap class="icon" />
+              <Sparkles class="icon" />
             </div>
             <h3 class="feature-name">{{ t.oneClickInstall }}</h3>
             <p class="feature-desc">{{ t.oneClickInstallDesc }}</p>
@@ -71,6 +71,27 @@ function goToWizard() {
             </div>
             <h3 class="feature-name">{{ t.multiChannelAccess }}</h3>
             <p class="feature-desc">{{ t.multiChannelAccessDesc }}</p>
+          </div>
+          <div class="feature-card card-apple">
+            <div class="feature-icon">
+              <Zap class="icon" />
+            </div>
+            <h3 class="feature-name">多模型支持</h3>
+            <p class="feature-desc">支持 MiniMax、阿里云百炼、iFlow 等多种 AI 模型提供商</p>
+          </div>
+          <div class="feature-card card-apple">
+            <div class="feature-icon">
+              <Download class="icon" />
+            </div>
+            <h3 class="feature-name">10+ 行业模板</h3>
+            <p class="feature-desc">涵盖电商、金融、制造等 10+ 个行业的专业模板</p>
+          </div>
+          <div class="feature-card card-apple">
+            <div class="feature-icon">
+              <Github class="icon" />
+            </div>
+            <h3 class="feature-name">开源免费</h3>
+            <p class="feature-desc">100% 开源，MIT 许可证，永久免费使用</p>
           </div>
         </div>
       </div>
