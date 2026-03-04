@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { I18nProvider } from "@/lib/i18n-context";
+import { ThemeProvider } from "@/lib/theme-context";
 
 export const metadata: Metadata = {
   title: "DownClaw - opendown.ai",
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased bg-[#f5f5f7] text-[#1d1d1f] font-sans">
-        <I18nProvider>
-          <Header />
-          <main>{children}</main>
-        </I18nProvider>
+        <ThemeProvider>
+          <I18nProvider>
+            <Header />
+            <main>{children}</main>
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
