@@ -17,7 +17,7 @@ const { language } = storeToRefs(useI18nStore())
 const step = ref(1)
 const selectedScenario = ref<Scenario | null>(null)
 const apiKey = ref('')
-const apiKeyProvider = ref<'minimax' | 'aliyun'>('minimax')
+const apiKeyProvider = ref<'minimax' | 'aliyun' | 'iflow'>('minimax')
 const copied = ref(false)
 const showHelp = ref(false)
 const channels = ref<ChannelConfig[]>([])
@@ -155,6 +155,21 @@ const installScript = computed(() => {
 
   const scenario = scenarios.find(s => s.id === selectedScenario.value?.id)
 
+  const getIflowModels = () => {
+    return [
+      { id: "TBStars2-200B-A13B", name: "TBStars2-200B-A13B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "DeepSeek-V3-0324", name: "DeepSeek-V3-0324", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "DeepSeek-R1-0528", name: "DeepSeek-R1-0528", reasoning: true, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "Qwen3-235B-A22B", name: "Qwen3-235B-A22B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "Qwen3-32B", name: "Qwen3-32B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "DeepSeek-V3", name: "DeepSeek-V3", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "DeepSeek-R1", name: "DeepSeek-R1", reasoning: true, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "GPT-4o", name: "GPT-4o", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "Claude-3.7-Sonnet", name: "Claude-3.7-Sonnet", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+      { id: "Gemini-2.5-Pro", name: "Gemini-2.5-Pro", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+    ]
+  }
+
   const configObj = {
     meta: { 
       lastTouchedVersion: "2026.3.1", 
@@ -167,7 +182,9 @@ const installScript = computed(() => {
     update: { channel: "stable" },
     auth: apiKeyProvider.value === 'minimax' 
       ? { profiles: { "minimax-cn:default": { provider: "minimax-cn", mode: "api_key" } } }
-      : { profiles: { "bailian:default": { provider: "bailian", mode: "api_key" } } },
+      : apiKeyProvider.value === 'aliyun'
+      ? { profiles: { "bailian:default": { provider: "bailian", mode: "api_key" } } }
+      : { profiles: { "iflow:default": { provider: "iflow", mode: "api_key" } } },
     models: {
       mode: "merge",
       providers: apiKeyProvider.value === 'minimax' 
@@ -179,7 +196,8 @@ const installScript = computed(() => {
               models: [{ id: "MiniMax-M2.5", name: "MiniMax-M2.5", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 }]
             }
           }
-        : {
+        : apiKeyProvider.value === 'aliyun'
+        ? {
             bailian: {
               baseUrl: "https://coding.dashscope.aliyuncs.com/v1",
               apiKey: apiKey.value,
@@ -187,12 +205,22 @@ const installScript = computed(() => {
               models: [{ id: "qwen3-max-2026-01-23", name: "qwen3-max-thinking", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 }]
             }
           }
+        : {
+            iflow: {
+              baseUrl: "https://apis.iflow.cn/v1",
+              apiKey: apiKey.value,
+              api: "openai",
+              models: getIflowModels()
+            }
+          }
     },
     agents: { 
       defaults: { 
         model: apiKeyProvider.value === 'minimax' 
           ? { primary: "minimax/MiniMax-M2.5" } 
-          : { primary: "qwen3-max" }
+          : apiKeyProvider.value === 'aliyun'
+          ? { primary: "qwen3-max" }
+          : { primary: "iflow/TBStars2-200B-A13B" }
       } 
     },
     commands: { native: "auto", nativeSkills: "auto", restart: true, ownerDisplay: "raw" },
@@ -391,6 +419,19 @@ onMounted(() => {
               {{ language === 'zh' ? '跳转到阿里云百炼' : 'Go to Alibaba Cloud Bailian' }}
             </a>
           </div>
+
+          <div class="provider-card card-apple">
+            <div class="provider-header">
+              <h3>心流 (iFlow)</h3>
+            </div>
+            <a 
+              href="https://platform.iflow.cn/profile?tab=apiKey" 
+              target="_blank" 
+              class="provider-link"
+            >
+              {{ language === 'zh' ? '跳转到心流控制台' : 'Go to iFlow Console' }}
+            </a>
+          </div>
         </div>
 
         <div class="provider-selector">
@@ -408,17 +449,24 @@ onMounted(() => {
           >
             {{ t.apiProviderAliyun }}
           </button>
+          <button 
+            @click="apiKeyProvider = 'iflow'"
+            class="selector-btn"
+            :class="{ active: apiKeyProvider === 'iflow' }"
+          >
+            心流 (iFlow)
+          </button>
         </div>
 
         <div class="api-input-section">
           <label class="input-label">
-            {{ apiKeyProvider === 'minimax' ? t.inputMinimaxApiKey : t.apiProviderAliyun }}
+            {{ apiKeyProvider === 'minimax' ? t.inputMinimaxApiKey : apiKeyProvider === 'aliyun' ? t.apiProviderAliyun : '心流 API Key' }}
           </label>
           <input
             v-model="apiKey"
             type="password"
             class="api-input"
-            :placeholder="t.apiKeyPlaceholder"
+            :placeholder="apiKeyProvider === 'iflow' ? 'iflow_xxx...' : t.apiKeyPlaceholder"
           />
           <p class="security-note">{{ t.securityNote }}</p>
         </div>

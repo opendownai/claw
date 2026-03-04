@@ -128,6 +128,26 @@ export const channelOptions: ChannelOption[] = [
         placeholderEn: 'Custom bot security signing key'
       }
     ]
+  },
+  {
+    id: 'iflow',
+    name: '心流',
+    nameEn: 'iFlow',
+    description: '通过心流 AI 助手接收和发送消息',
+    descriptionEn: 'Receive and send messages via iFlow AI assistant',
+    icon: 'zap',
+    color: '#FF6B6B',
+    configFields: [
+      {
+        name: 'webhookUrl',
+        label: 'Webhook URL',
+        labelEn: 'Webhook URL',
+        type: 'text',
+        required: true,
+        placeholder: 'https://iflow.cn/webhook/xxx',
+        placeholderEn: 'https://iflow.cn/webhook/xxx'
+      }
+    ]
   }
 ]
 
