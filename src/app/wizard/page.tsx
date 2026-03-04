@@ -532,7 +532,7 @@ open http://127.0.0.1:18789
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold mb-1 text-[#1d1d1f]">{t.deployDownclaw}</h1>
-          <p className="text-[#86868b] text-sm">{t.deploySubtitle}</p>
+          <p className="text-[#86868b] text-sm">{language === 'zh' ? '4步完成部署：选择用途 → 选择渠道 → 配置API → 一键安装' : '4-step deployment: Choose Purpose → Select Channels → Configure API → One-Click Install'}</p>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -606,14 +606,14 @@ open http://127.0.0.1:18789
                 {t.channelTip}
               </div>
               
-              {/* 测试消息发送功能 */}
-              {channelManager.getEnabledChannels().length > 0 && (
+               {/* 测试消息发送功能 */}
+              {channelManager.getAllChannels().some(c => c.enabled) && (
                 <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
                   <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">
                     {language === 'zh' ? '测试消息发送' : 'Test Message Sending'}
                   </h3>
                   <div className="space-y-2">
-                    {channelManager.getEnabledChannels().map((channel: ChannelConfig) => (
+                    {channelManager.getAllChannels().filter(channel => channel.enabled).map((channel: ChannelConfig) => (
                       <div key={channel.id} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
@@ -812,6 +812,11 @@ open http://127.0.0.1:18789
                   : (language === 'zh' ? '阿里云API密钥...' : 'Alibaba Cloud API Key...')}
                 className="w-full px-4 py-3 bg-white border border-[#d2d2d7] rounded-xl focus:outline-none focus:border-[#0A84FF] text-sm"
               />
+              <div className="text-xs text-orange-500">
+                {language === 'zh' 
+                  ? '安全提示：API密钥仅在本地使用，不会上传到任何服务器' 
+                  : 'Security Note: API keys are used locally and not uploaded to any server'}
+              </div>
               <button
                 onClick={() => setStep(4)}
                 disabled={!apiKey}
