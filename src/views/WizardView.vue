@@ -244,10 +244,14 @@ function selectScenario(scenario: Scenario) {
   step.value = 2
 }
 
-function skipToInstall() {
+function skipStep1() {
   if (!selectedScenario.value) {
     selectedScenario.value = scenarios[0]
   }
+  step.value = 2
+}
+
+function skipStep2() {
   step.value = 4
 }
 
@@ -343,7 +347,7 @@ onMounted(() => {
         <div class="step-tip">{{ t.channelTip }}</div>
         
         <div class="step-actions">
-          <button @click="skipToInstall" class="btn btn-secondary">
+          <button @click="skipStep1" class="btn btn-secondary">
             {{ t.skipThisStep }}
           </button>
           <button @click="step = 2" class="btn btn-primary">
@@ -369,7 +373,7 @@ onMounted(() => {
         </div>
         
         <div class="step-actions">
-          <button @click="skipToInstall" class="btn btn-secondary">
+          <button @click="skipStep2" class="btn btn-secondary">
             {{ t.skipThisStep }}
           </button>
           <button @click="step = 3" class="btn btn-primary">
