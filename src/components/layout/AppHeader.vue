@@ -6,55 +6,128 @@ const { t } = useI18nStore()
 </script>
 
 <template>
-  <header class="header">
-    <div class="container header-content">
-      <div class="header-left">
-        <a href="/" class="header-link">
-          <span class="header-title">OpenClaw</span>
-        </a>
+  <header class="main-nav">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <img 
+          src="https://cdn.opendown.ai/opendown-ai-2.png" 
+          alt="OpenDown" 
+          class="nav-logo-img"
+        >
+        <a href="https://opendown.ai" class="nav-logo-text">OpenDown</a>
       </div>
-      <div class="header-right">
-        <a href="https://discord.gg/gjGb5WEz" target="_blank" class="header-link">
-          <MessageCircle class="icon" />
-          <span>{{ t.discord }}</span>
-        </a>
+      <div class="nav-links">
+        <a href="/" class="nav-link active">Home</a>
+        <a href="https://claw.opendown.ai/" target="_blank" class="nav-link">OpenClaw Deploy</a>
+        <a href="https://github.com/opendownai" target="_blank" class="nav-link">GitHub</a>
+        <a href="https://discord.gg/gjGb5WEz" target="_blank" class="nav-link">Discord</a>
+      </div>
+      <div class="nav-theme-toggle">
+        <!-- Theme toggle will be added later if needed -->
       </div>
     </div>
   </header>
 </template>
 
 <style scoped>
-.header {
-  padding: 16px 0;
+.main-nav {
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
-  background: var(--bg-secondary);
+  z-index: 1000;
+  padding: 12px 0;
 }
 
-.header-content {
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
 }
 
-.header-link {
+.nav-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  transition: color 0.2s;
+  gap: 12px;
+  text-decoration: none;
 }
 
-.header-link:hover {
+.nav-logo-img {
+  height: 32px;
+  width: auto;
+  border-radius: 8px;
+}
+
+.nav-logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dim));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link:hover {
   color: var(--accent-blue);
 }
 
-.header-title {
-  font-size: 16px;
+.nav-link.active {
+  color: var(--accent-blue);
 }
 
-.icon {
-  width: 20px;
-  height: 20px;
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-blue);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 16px;
+  }
+  
+  .nav-links {
+    display: none;
+  }
+  
+  .nav-logo-img {
+    height: 28px;
+  }
+  
+  .nav-logo-text {
+    font-size: 18px;
+  }
 }
 </style>

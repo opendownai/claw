@@ -7,95 +7,83 @@ const { t } = useI18nStore()
 
 <template>
   <footer class="footer">
-    <div class="container footer-content">
-      <div class="footer-left">
-        <img 
-          src="https://cdn.opendown.ai/opendown-ai-2.png" 
-          alt="DownClaw Logo" 
-          class="footer-logo"
-        />
-        <span>{{ t.footerDownclaw }}</span>
+    <div class="footer-main">
+      <div class="footer-links">
+        <a href="https://github.com/opendownai" target="_blank">GitHub</a>
+        <a href="https://discord.gg/gjGb5WEz" target="_blank">Discord</a>
+        <a href="https://opendown.ai/docs" target="_blank">Docs</a>
+        <a href="https://claw.opendown.ai/" target="_blank">OpenClaw Deploy</a>
+        <a href="https://www.buymeacoffee.com/opendown" target="_blank">Buy Me a Coffee</a>
+        <a href="mailto:support@opendown.ai">Contact</a>
       </div>
-      <div class="footer-right">
-        <a href="https://github.com/opendownai/claw" target="_blank" class="footer-link">
-          <Github class="icon" />
-          {{ t.github }}
-        </a>
-        <a href="https://discord.gg/gjGb5WEz" target="_blank" class="footer-link">
-          <MessageCircle class="icon" />
-          {{ t.discord }}
-        </a>
-        <span class="footer-license">{{ t.footerLicense }}</span>
-      </div>
+      <p class="footer-copyright">
+        © 2026 OpenDown. All rights reserved.
+      </p>
     </div>
   </footer>
 </template>
 
 <style scoped>
 .footer {
-  padding: 24px 0;
-  border-top: 1px solid var(--border-color);
-  background: var(--bg-secondary);
-}
-
-.footer-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer-logo {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-}
-
-.footer-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.footer-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  text-align: center;
+  padding: 40px 24px 80px;
   color: var(--text-secondary);
   font-size: 14px;
-  transition: color 0.2s;
 }
 
-.footer-link:hover {
-  color: var(--accent-blue);
+.footer-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
 }
 
-.footer-license {
-  color: var(--text-tertiary);
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding: 0 24px;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
   font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  padding: 6px 12px;
+  border-radius: 8px;
 }
 
-.icon {
-  width: 18px;
-  height: 18px;
+.footer-links a:hover {
+  color: var(--accent-blue);
+  background: rgba(99, 102, 241, 0.1);
 }
 
-@media (max-width: 640px) {
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
+.footer-copyright {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 13px;
+  opacity: 0.8;
+  margin: 0;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 16px;
   }
   
-  .footer-right {
-    flex-wrap: wrap;
-    justify-content: center;
+  .footer-links {
+    gap: 16px;
+    padding: 0 8px;
+  }
+  
+  .footer-links a {
+    padding: 4px 8px;
+    font-size: 13px;
   }
 }
 </style>

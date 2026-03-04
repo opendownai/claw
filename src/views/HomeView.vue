@@ -96,61 +96,6 @@ function goToWizard() {
         </div>
       </div>
     </section>
-
-    <section class="features">
-      <div class="container">
-        <h2 class="features-title">{{ t.whyChooseDownclaw }}</h2>
-    <section class="features">
-      <div class="container">
-        <h2 class="features-title">{{ t.whyChooseDownclaw }}</h2>
-        <div class="features-grid">
-          <div class="feature-card card-apple">
-            <div class="feature-icon">
-              <Shield class="icon" />
-            </div>
-            <h3 class="feature-name">{{ t.dataLocalStorage }}</h3>
-            <p class="feature-desc">{{ t.dataLocalStorageDesc }}</p>
-          </div>
-          <div class="feature-card card-apple">
-            <div class="feature-icon">
-              <Sparkles class="icon" />
-            </div>
-            <h3 class="feature-name">{{ t.oneClickInstall }}</h3>
-            <p class="feature-desc">{{ t.oneClickInstallDesc }}</p>
-          </div>
-          <div class="feature-card card-apple">
-            <div class="feature-icon">
-              <Terminal class="icon" />
-            </div>
-            <h3 class="feature-name">{{ t.multiChannelAccess }}</h3>
-            <p class="feature-desc">{{ t.multiChannelAccessDesc }}</p>
-          </div>
-          <div class="feature-card card-apple">
-            <div class="feature-icon">
-              <Zap class="icon" />
-            </div>
-            <h3 class="feature-name">多模型支持</h3>
-            <p class="feature-desc">支持 MiniMax、阿里云百炼、iFlow 等多种 AI 模型提供商</p>
-          </div>
-          <div class="feature-card card-apple">
-            <div class="feature-icon">
-              <Download class="icon" />
-            </div>
-            <h3 class="feature-name">10+ 行业模板</h3>
-            <p class="feature-desc">涵盖电商、金融、制造等 10+ 个行业的专业模板</p>
-          </div>
-          <div class="feature-card card-apple">
-            <div class="feature-icon">
-              <Github class="icon" />
-            </div>
-            <h3 class="feature-name">开源免费</h3>
-            <p class="feature-desc">100% 开源，MIT 许可证，永久免费使用</p>
-          </div>
-        </div>
-      </div>
-    </section>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -227,14 +172,12 @@ function goToWizard() {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-blue), #0A74E0);
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dim));
   color: white;
-  box-shadow: 0 4px 12px rgba(10, 132, 255, 0.3);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #0A74E0, #0956BF);
-  box-shadow: 0 6px 16px rgba(10, 132, 255, 0.4);
+  background: linear-gradient(135deg, var(--accent-blue-dim), #4338ca);
 }
 
 .btn-secondary {
@@ -256,16 +199,6 @@ function goToWizard() {
 .features {
   padding: 60px 0;
   background: var(--bg-primary);
-}
-
-.features-title {
-  font-family: 'Orbitron', 'Rajdhani', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: center;
-  margin-bottom: 40px;
-  letter-spacing: 0.08em;
 }
 
 .features-grid {
