@@ -18,6 +18,7 @@ export interface ChannelOption {
   icon: string
   configFields: ConfigField[]
   color: string
+  helpUrl?: string
 }
 
 export interface ConfigField {
@@ -46,8 +47,8 @@ export const channelOptions: ChannelOption[] = [
     id: 'dingtalk',
     name: '钉钉',
     nameEn: 'DingTalk',
-    description: '通过钉钉机器人接收和发送消息',
-    descriptionEn: 'Receive and send messages via DingTalk bot',
+    description: '通过钉钉AI员工接收和发送消息，支持MCP协议深度集成',
+    descriptionEn: 'Receive and send messages via DingTalk AI employee with MCP protocol integration',
     icon: 'message-circle',
     color: '#1890FF',
     configFields: [
@@ -68,8 +69,18 @@ export const channelOptions: ChannelOption[] = [
         required: false,
         placeholder: '安全设置的加签密钥',
         placeholderEn: 'Signing key from security settings'
+      },
+      {
+        name: 'mcpServerUrl',
+        label: 'MCP服务地址',
+        labelEn: 'MCP Server URL',
+        type: 'text',
+        required: false,
+        placeholder: 'https://your-mcp-server.com (可选，用于深度集成)',
+        placeholderEn: 'https://your-mcp-server.com (optional, for deep integration)'
       }
-    ]
+    ],
+    helpUrl: 'https://open.dingtalk.com/document/dingstart/build-dingtalk-ai-employees'
   },
   {
     id: 'telegram',
@@ -104,30 +115,49 @@ export const channelOptions: ChannelOption[] = [
     id: 'feishu',
     name: '飞书',
     nameEn: 'Feishu',
-    description: '通过飞书机器人接收和发送消息',
-    descriptionEn: 'Receive and send messages via Feishu bot',
+    description: '通过飞书AI员工接收和发送消息，支持WebSocket长连接和事件订阅',
+    descriptionEn: 'Receive and send messages via Feishu AI employee with WebSocket connection and event subscription',
     icon: 'zap',
     color: '#4285f4',
     configFields: [
       {
-        name: 'webhookUrl',
-        label: 'Webhook URL',
-        labelEn: 'Webhook URL',
+        name: 'appId',
+        label: 'App ID',
+        labelEn: 'App ID',
         type: 'text',
         required: true,
-        placeholder: 'https://open.feishu.cn/open-apis/bot/v2/hook/...',
-        placeholderEn: 'https://open.feishu.cn/open-apis/bot/v2/hook/...'
+        placeholder: 'cli_xxx (企业自建应用ID)',
+        placeholderEn: 'cli_xxx (Enterprise self-built app ID)'
       },
       {
-        name: 'secret',
-        label: 'Secret',
-        labelEn: 'Secret',
+        name: 'appSecret',
+        label: 'App Secret',
+        labelEn: 'App Secret',
+        type: 'password',
+        required: true,
+        placeholder: '应用凭证中的App Secret',
+        placeholderEn: 'App Secret from application credentials'
+      },
+      {
+        name: 'verificationToken',
+        label: '验证令牌',
+        labelEn: 'Verification Token',
+        type: 'text',
+        required: false,
+        placeholder: '事件订阅的验证令牌 (可选)',
+        placeholderEn: 'Event subscription verification token (optional)'
+      },
+      {
+        name: 'encryptKey',
+        label: '加密密钥',
+        labelEn: 'Encryption Key',
         type: 'password',
         required: false,
-        placeholder: '自定义机器人安全设置的密钥',
-        placeholderEn: 'Custom bot security signing key'
+        placeholder: '事件订阅的加密密钥 (可选)',
+        placeholderEn: 'Event subscription encryption key (optional)'
       }
-    ]
+    ],
+    helpUrl: 'https://www.feishu.cn/content/article/7602519239445974205'
   },
   {
     id: 'iflow',

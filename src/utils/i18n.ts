@@ -81,6 +81,7 @@ export interface Translations {
   language: string
   english: string
   chinese: string
+  channelHelpLink: string
 }
 
 export const translations: Record<Language, Translations> = {
@@ -165,6 +166,7 @@ export const translations: Record<Language, Translations> = {
     language: 'Language',
     english: 'English',
     chinese: '中文',
+    channelHelpLink: 'View Setup Guide',
   },
   zh: {
     discord: 'Discord',
@@ -247,6 +249,7 @@ export const translations: Record<Language, Translations> = {
     language: '语言',
     english: 'English',
     chinese: '中文',
+    channelHelpLink: '查看配置教程',
   },
 }
 

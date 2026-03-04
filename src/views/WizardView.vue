@@ -370,7 +370,7 @@ onMounted(() => {
       </div>
 
       <div class="steps-indicator">
-        <div v-for="s in 4" :key="s" class="step-item">
+        <div v-for="s in 4" :key="s" class="step-item" @click="step > s ? step = s : null" :style="{ cursor: step > s ? 'pointer' : 'default' }">
           <div 
             class="step-circle" 
             :class="{ active: step >= s, completed: step > s }"

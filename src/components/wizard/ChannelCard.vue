@@ -48,6 +48,14 @@ function handleConfigChange(field: string, e: Event) {
         <div class="channel-text">
           <h3 class="channel-name">{{ getChannelOptionName(channelOption, language) }}</h3>
           <p class="channel-desc">{{ getChannelOptionDescription(channelOption, language) }}</p>
+          <a 
+            v-if="channelOption.helpUrl" 
+            :href="channelOption.helpUrl" 
+            target="_blank" 
+            class="help-link"
+          >
+            {{ t.channelHelpLink }}
+          </a>
         </div>
       </div>
       <label class="toggle">
@@ -88,6 +96,18 @@ function handleConfigChange(field: string, e: Event) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.help-link {
+  font-size: 12px;
+  color: var(--accent-blue);
+  text-decoration: none;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.help-link:hover {
+  text-decoration: underline;
 }
 
 .channel-info {
