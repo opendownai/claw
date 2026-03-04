@@ -528,22 +528,22 @@ open http://127.0.0.1:18789
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-[#f5f5f7] text-[#1d1d1f]">
+        <div className="min-h-screen py-8 px-4 bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#0a0a12] dark:text-[#f5f5f7]">
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-semibold mb-1 text-[#1d1d1f]">{t.deployDownclaw}</h1>
-          <p className="text-[#86868b] text-sm">{t.homeDescription}</p>
+          <h1 className="text-2xl font-semibold mb-1 text-[#1d1d1f] dark:text-[#f5f5f7]">{t.deployDownclaw}</h1>
+          <p className="text-[#86868b] text-sm dark:text-[#a0a0a8]">{t.homeDescription}</p>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-8">
           {[1, 2, 3, 4].map((s) => (
             <div key={s} className="flex items-center">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                step >= s ? 'bg-[#0A84FF] text-white' : 'bg-[#e5e5e7] text-[#86868b]'
+                step >= s ? 'bg-[#0A84FF] text-white' : 'bg-[#e5e5e7] text-[#86868b] dark:bg-[#31313a] dark:text-[#a0a0a8]'
               }`}>
                 {step > s ? <Check className="w-5 h-5" /> : s}
               </div>
-              {s < 4 && <div className={`w-0.5 h-1 ${step > s ? 'bg-[#0A84FF]' : 'bg-[#e5e5e7]'}`} />}
+              {s < 4 && <div className={`w-0.5 h-1 ${step > s ? 'bg-[#0A84FF]' : 'bg-[#e5e5e7] dark:bg-[#31313a]'}`} />}
             </div>
           ))}
         </div>
@@ -592,11 +592,11 @@ open http://127.0.0.1:18789
                   <button
                     key={scenario.id}
                     onClick={() => { setSelectedScenario(scenario); setStep(2); }}
-                    className="p-4 card-apple border border-[#d2d2d7] rounded-2xl hover:border-[#0A84FF] hover:bg-[#f5f5f7] transition-all text-left cursor-pointer"
+                     className="p-4 card-apple border border-[#d2d2d7] dark:border-[#31313a] rounded-2xl hover:border-[#0A84FF] hover:bg-[#f5f5f7] dark:hover:bg-[#31313a] transition-all text-left cursor-pointer"
                   >
                     <Icon className="w-5 h-5 text-[#0A84FF] mb-2" />
-                    <div className="font-medium text-sm text-[#1d1d1f]">{scenario.name}</div>
-                    <div className="text-xs text-[#6e6e73]">{scenario.description}</div>
+                     <div className="font-medium text-sm text-[#1d1d1f] dark:text-[#f5f5f7]">{scenario.name}</div>
+                     <div className="text-xs text-[#6e6e73] dark:text-[#a0a0a8]">{scenario.description}</div>
                   </button>
                 )
               })}
@@ -654,14 +654,14 @@ open http://127.0.0.1:18789
                 <button
                   type="button"
                   onClick={() => setStep(4)}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 btn-apple rounded-xl transition-all"
+                   className="flex-1 flex items-center justify-center gap-2 py-3 btn-apple rounded-xl transition-all dark:hover:bg-[#31313a]"
                 >
                   {language === 'zh' ? '跳过此步骤' : 'Skip This Step'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg dark:bg-[#0A74E0]"
                 >
                   {language === 'zh' ? '下一步' : 'Next Step'} <ArrowRight className="w-4 h-4" />
                 </button>
@@ -672,10 +672,10 @@ open http://127.0.0.1:18789
 
         {step === 2 && (
           <div className="space-y-4">
-            <button onClick={() => setStep(1)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
-              {t.backToSelect}
-            </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step2Title}</h2>
+          <button onClick={() => setStep(1)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm dark:text-[#a0a0a8] dark:hover:text-[#f5f5f7]">
+            {t.backToSelect}
+          </button>
+          <h2 className="text-lg font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">{t.step2Title}</h2>
             <div className="space-y-3">
               {channelOptions.map((option) => (
                 <ChannelCard
@@ -712,7 +712,7 @@ open http://127.0.0.1:18789
                 <button
                   type="button"
                   onClick={() => setStep(3)}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg dark:bg-[#0A74E0]"
                 >
                   {language === 'zh' ? '下一步' : 'Next Step'} <ArrowRight className="w-4 h-4" />
                 </button>
@@ -723,17 +723,17 @@ open http://127.0.0.1:18789
 
         {step === 3 && (
           <div className="space-y-4">
-            <button onClick={() => setStep(2)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
+            <button onClick={() => setStep(2)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm dark:text-[#a0a0a8] dark:hover:text-[#f5f5f7]">
               {t.backToSelect}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step3Title}</h2>
+             <h2 className="text-lg font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">{t.step3Title}</h2>
              
-            <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm mb-4">
+            <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm mb-4 dark:bg-[#121218] dark:border-[#31313a]">
               <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-sm">{t.apiProviderMiniMax}</h3>
+                   <h3 className="font-medium text-sm text-[#1d1d1f] dark:text-[#f5f5f7]">{t.apiProviderMiniMax}</h3>
                 <div className="flex items-center">
                   <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                  <span className="text-xs text-gray-500">{t.codingPlanRecommended.replace('💡 ', '')}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{t.codingPlanRecommended.replace('💡 ', '')}</span>
                 </div>
               </div>
               
@@ -751,12 +751,12 @@ open http://127.0.0.1:18789
               </a>
             </div>
             
-            <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm mb-4">
+             <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm mb-4 dark:bg-[#121218] dark:border-[#31313a]">
               <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-sm">{t.apiProviderAliyun}</h3>
+                   <h3 className="font-medium text-sm text-[#1d1d1f] dark:text-[#f5f5f7]">{t.apiProviderAliyun}</h3>
                 <div className="flex items-center">
                   <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
-                  <span className="text-xs text-gray-500">{language === 'zh' ? '可选' : 'Optional'}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{language === 'zh' ? '可选' : 'Optional'}</span>
                 </div>
               </div>
               
@@ -778,21 +778,21 @@ open http://127.0.0.1:18789
               <div className="flex gap-2 mb-3">
                 <button
                   onClick={() => setApiKeyProvider('minimax')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    apiKeyProvider === 'minimax' 
-                      ? 'bg-[#0A84FF] text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                   className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                     apiKeyProvider === 'minimax' 
+                       ? 'bg-[#0A84FF] text-white' 
+                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-[#31313a] dark:text-[#f5f5f7] dark:hover:bg-[#424245]'
+                   }`}
                 >
                   {t.apiProviderMiniMax}
                 </button>
                 <button
                   onClick={() => setApiKeyProvider('aliyun')}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    apiKeyProvider === 'aliyun' 
-                      ? 'bg-[#0A84FF] text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                   className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                     apiKeyProvider === 'aliyun' 
+                       ? 'bg-[#0A84FF] text-white' 
+                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-[#31313a] dark:text-[#f5f5f7] dark:hover:bg-[#424245]'
+                   }`}
                 >
                   {t.apiProviderAliyun}
                 </button>
@@ -808,7 +808,7 @@ open http://127.0.0.1:18789
                 placeholder={apiKeyProvider === 'minimax' 
                   ? t.apiKeyPlaceholder 
                   : t.apiProviderAliyun + ' API ' + (language === 'zh' ? '密钥...' : 'Key...')}
-                className="w-full px-4 py-3 bg-white border border-[#d2d2d7] rounded-xl focus:outline-none focus:border-[#0A84FF] text-sm"
+                className="w-full px-4 py-3 bg-white border border-[#d2d2d7] rounded-xl focus:outline-none focus:border-[#0A84FF] text-sm dark:bg-[#121218] dark:border-[#31313a] dark:text-[#f5f5f7]"
               />
               <div className="text-xs text-orange-500">
                 {t.securityNote}
@@ -816,7 +816,7 @@ open http://127.0.0.1:18789
               <button
                 onClick={() => setStep(4)}
                 disabled={!apiKey}
-                className="w-full flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50 dark:bg-[#0A74E0]"
               >
                 {language === 'zh' ? '下一步' : 'Next Step'} <ArrowRight className="w-4 h-4" />
               </button>
@@ -826,12 +826,12 @@ open http://127.0.0.1:18789
 
         {step === 4 && (
           <div className="space-y-4">
-            <button onClick={() => setStep(3)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm">
+            <button onClick={() => setStep(3)} className="text-[#86868b] hover:text-[#1d1d1f] text-sm dark:text-[#a0a0a8] dark:hover:text-[#f5f5f7]">
               {t.backToSelect}
             </button>
-            <h2 className="text-lg font-semibold text-[#1d1d1f]">{t.step4Title}</h2>
-            
-            <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm">
+             <h2 className="text-lg font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">{t.step4Title}</h2>
+             
+            <div className="card-apple rounded-2xl p-4 space-y-3 shadow-sm dark:bg-[#121218] dark:border-[#31313a]">
               <div className="flex items-center gap-3 text-sm">
                 <span className="w-6 h-6 rounded-full bg-[#0A84FF] text-white text-xs flex items-center justify-center">1</span>
                 <span>{language === 'zh' ? '复制命令' : 'Copy Command'}</span>
@@ -853,7 +853,7 @@ open http://127.0.0.1:18789
             <button
               onClick={copyCommand}
               disabled={!apiKey}
-              className="w-full flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-3 btn-primary-apple rounded-xl font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50 dark:bg-[#0A74E0]"
             >
               {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
               {copied ? (language === 'zh' ? '已复制' : 'Copied') : (language === 'zh' ? '复制命令' : 'Copy Command')}
