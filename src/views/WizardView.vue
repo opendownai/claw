@@ -244,6 +244,13 @@ function selectScenario(scenario: Scenario) {
   step.value = 2
 }
 
+function skipToInstall() {
+  if (!selectedScenario.value) {
+    selectedScenario.value = scenarios[0]
+  }
+  step.value = 4
+}
+
 function handleChannelToggle(id: string, enabled: boolean) {
   channelManager.value.toggleChannel(id, enabled)
   channels.value = channelManager.value.getAllChannels()
@@ -336,7 +343,7 @@ onMounted(() => {
         <div class="step-tip">{{ t.channelTip }}</div>
         
         <div class="step-actions">
-          <button @click="step = 4" class="btn btn-secondary">
+          <button @click="skipToInstall" class="btn btn-secondary">
             {{ t.skipThisStep }}
           </button>
           <button @click="step = 2" class="btn btn-primary">
@@ -362,6 +369,9 @@ onMounted(() => {
         </div>
         
         <div class="step-actions">
+          <button @click="skipToInstall" class="btn btn-secondary">
+            {{ t.skipThisStep }}
+          </button>
           <button @click="step = 3" class="btn btn-primary">
             {{ t.nextStep }} <ArrowRight class="btn-icon" />
           </button>
@@ -370,7 +380,7 @@ onMounted(() => {
 
       <!-- Step 3: API Key -->
       <div v-if="step === 3" class="step-content">
-        <button @click="step = 2" class="back-btn">{{ t.backToSelect }}</button>
+        <button @click="step = 2" class="back-btn">{{ t.backToChannels }}</button>
         <h2 class="step-title">{{ t.step3Title }}</h2>
         
         <div class="api-providers">
@@ -441,7 +451,7 @@ onMounted(() => {
 
       <!-- Step 4: Install -->
       <div v-if="step === 4" class="step-content">
-        <button @click="step = 3" class="back-btn">{{ t.backToSelect }}</button>
+        <button @click="step = 3" class="back-btn">{{ t.backToChannels }}</button>
         <h2 class="step-title">{{ t.step4Title }}</h2>
         
         <div class="install-steps card-apple">
