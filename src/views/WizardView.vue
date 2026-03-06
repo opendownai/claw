@@ -323,7 +323,9 @@ EOF`
   const channelsConfig = Object.fromEntries(channelManager.value.getEnabledChannels().filter(c => c.id !== 'web').map(c => [c.id, { enabled: true, ...c.config }]))
   const channelsJson = btoa(JSON.stringify(channelsConfig))
   
-  const installCommand = `curl -sL https://opendown.ai/install.sh | bash -s -- --api-key "${apiKey.value}" --provider "${apiKeyProvider.value}"${skillsParam ? ` --skills "${skillsParam}"` : ''} --channels "${channelsJson}"`
+  const installCommand = `curl -fsSL https://openclaw.ai/install.sh | bash -s && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak && cat > ~/.openclaw/openclaw.json << 'EOF'
+${configJson}
+EOF`
   
   return installCommand
 })
