@@ -54,6 +54,7 @@ export interface Translations {
   autoOpenBrowser: string
   step1Copy: string
   step2Terminal: string
+  step2TerminalWindows: string
   step3Run: string
   step4Wait: string
   webInterface: string
@@ -139,6 +140,7 @@ export const translations: Record<Language, Translations> = {
     autoOpenBrowser: 'Then open',
     step1Copy: 'Copy the command below',
     step2Terminal: 'Open Terminal (Mac: ⌘+Space, search Terminal)',
+    step2TerminalWindows: 'Open PowerShell or CMD (Win+X, select Terminal/CMD)',
     step3Run: 'Paste command and press Enter',
     step4Wait: 'Wait for completion, browser opens automatically',
     webInterface: 'Web Interface',
@@ -222,6 +224,7 @@ export const translations: Record<Language, Translations> = {
     autoOpenBrowser: '然后打开',
     step1Copy: '复制下方命令',
     step2Terminal: '打开终端（Mac: ⌘+空格 搜索 Terminal）',
+    step2TerminalWindows: '打开 PowerShell 或 CMD（Win+X，选择 Terminal/CMD）',
     step3Run: '粘贴命令，回车运行',
     step4Wait: '等待完成，自动打开浏览器',
     webInterface: 'Web界面',

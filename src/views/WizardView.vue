@@ -33,7 +33,7 @@ const providers: Provider[] = [
     nameEn: 'MiniMax',
     description: '支持 MiniMax-M2.5 模型，适合中文场景',
     descriptionEn: 'Supports MiniMax-M2.5 model, suitable for Chinese scenarios',
-    consoleUrl: 'https://platform.minimaxi.com',
+    consoleUrl: 'https://platform.minimaxi.com/user-center/basic-information/interface-key',
     apiKeyLabel: 'MiniMax API Key',
     apiKeyPlaceholder: 'sk-xxx...',
     recommended: true
@@ -70,11 +70,16 @@ function selectProvider(id: Provider['id']) {
 }
 
 const step = ref(1)
-const selectedScenario = ref<Scenario | null>(null)
 const apiKey = ref('')
 const apiKeyProvider = ref<'minimax' | 'aliyun' | 'iflow'>('minimax')
+const selectedScenario = ref<Scenario | null>(null)
 const copied = ref(false)
 const showHelp = ref(false)
+const isWindows = ref(typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('win'))
+
+const step2TerminalText = computed(() => {
+  return isWindows.value ? t.step2TerminalWindows : t.step2Terminal
+})
 const channels = ref<ChannelConfig[]>([])
 
 const iconMap: Record<string, any> = {
@@ -288,7 +293,69 @@ const installScript = computed(() => {
 
   const configJson = JSON.stringify(configObj, null, 2)
 
-  return `#!/bin/bash
+  const isWindows = typeof window !== 'undefined' && navigator.platform.toLowerCase().includes('win')
+  
+  const shellHeader = isWindows 
+    ? '@echo off\r\nrem Windows PowerShell/CMD\r\n'
+    : '#!/usr/bin/env bash'
+
+  const openBrowser = isWindows
+    ? 'start http://127.0.0.1:18789'
+    : 'open http://127.0.0.1:18789'
+
+  const backgroundRun = isWindows
+    ? 'start /b openclaw gateway --port 18789 > %USERPROFILE%\\.openclaw\\gateway.log 2>&1'
+    : 'openclaw gateway --port 18789 > ~/.openclaw/gateway.log 2>&1 &'
+
+  const skillsInstall = scenario?.skills 
+    ? scenario.skills.map((skill: string) => isWindows 
+      ? `npx clawhub@latest install ${skill}`
+      : `npx clawhub@latest install ${skill}`).join(isWindows ? '\r\n' : '\n')
+    : (isWindows ? 'echo No skills to install' : 'echo "No skills to install"')
+
+  const configWrite = isWindows
+    ? `echo ${configJson.replace(/"/g, '""').replace(/\n/g, '\r\n')} > %USERPROFILE%\\.openclaw\\openclaw.json`
+    : `cat > ~/.openclaw/openclaw.json << 'EOFCONFIG'\n${configJson}\nEOFCONFIG`
+
+  if (isWindows) {
+    return `${shellHeader}
+
+echo ====== Step 1: Create Config ======
+if not exist "%USERPROFILE%\\.openclaw" mkdir "%USERPROFILE%\\.openclaw"
+${configWrite}
+
+echo.
+echo ====== Step 2: Check Environment ======
+node --version >nul 2>&1
+if errorlevel 1 (
+    echo Node.js not detected. Please install Node.js first.
+    exit /b 1
+)
+echo Node.js version: 
+node -v
+
+echo.
+echo ====== Step 3: Install OpenClaw ======
+npm install -g openclaw@latest
+
+echo.
+echo ====== Step 4: Install Skills ======
+${skillsInstall}
+
+echo.
+echo ====== Step 5: Start Service ======
+${backgroundRun}
+echo OpenClaw gateway started
+echo Server running at: http://127.0.0.1:18789
+echo.
+echo Installation complete! Please open in browser
+${openBrowser}
+`
+  }
+
+  return `#!/usr/bin/env bash
+set -e
+
 echo "====== Step 1: Create Config ======"
 mkdir -p ~/.openclaw
 cat > ~/.openclaw/openclaw.json << 'EOFCONFIG'
@@ -309,16 +376,16 @@ npm install -g openclaw@latest
 
 echo ""
 echo "====== Step 4: Install Skills ======"
-${scenario?.skills ? scenario.skills.map((skill: string) => `npx clawhub@latest install ${skill}`).join('\n') : 'echo "No skills to install"'}
+${skillsInstall}
 
 echo ""
 echo "====== Step 5: Start Service ======"
-openclaw gateway --port 18789 > ~/.openclaw/gateway.log 2>&1 &
+${backgroundRun}
 echo "OpenClaw gateway started"
 echo "Server running at: http://127.0.0.1:18789"
 echo ""
 echo "Installation complete! Please open in browser"
-open http://127.0.0.1:18789
+${openBrowser}
 `
 })
 
@@ -503,7 +570,7 @@ onMounted(() => {
           </div>
           <div class="install-step">
             <span class="step-num">2</span>
-            <span>{{ t.step2Terminal }}</span>
+            <span>{{ step2TerminalText }}</span>
           </div>
           <div class="install-step">
             <span class="step-num">3</span>
@@ -522,7 +589,10 @@ onMounted(() => {
         </button>
 
         <p class="install-hint">
-          {{ language === 'zh' ? '复制上述命令并粘贴到您的终端中运行' : 'Copy the command above and paste it into your terminal to run' }}
+          {{ isWindows 
+            ? (language === 'zh' ? '复制上述命令并粘贴到 PowerShell 或 CMD 中运行' : 'Copy the command above and paste it into PowerShell or CMD to run')
+            : (language === 'zh' ? '复制上述命令并粘贴到您的终端中运行' : 'Copy the command above and paste it into your terminal to run')
+          }}
         </p>
       </div>
     </div>
