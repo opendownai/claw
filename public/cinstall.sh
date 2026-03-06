@@ -1,8 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-# OpenClaw Installer for macOS and Linux
-# Usage: curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+# for macOS and Linux (China Mirror Version)
+# Usage: curl -fs OpenClaw InstallerSL https://opendown.ai/cinstall.sh | bash
+
+# China mirror settings
+NPM_REGISTRY="https://registry.npmmirror.com"
+GITHUB_MIRROR="https://ghproxy.com/"
+NODESOURCE_MIRROR="https://npmmirror.com/mirrors/node"
 
 BOLD='\033[1m'
 ACCENT='\033[38;2;255;77;77m'       # coral-bright  #ff4d4d
@@ -55,6 +60,12 @@ download_file() {
     if [[ -z "$DOWNLOADER" ]]; then
         detect_downloader
     fi
+    
+    # Use GitHub mirror for github.com URLs
+    if [[ "$url" == https://github.com* ]] || [[ "$url" == https://raw.githubusercontent.com* ]]; then
+        url="${GITHUB_MIRROR}${url}"
+    fi
+    
     if [[ "$DOWNLOADER" == "curl" ]]; then
         curl -fsSL --proto '=https' --tlsv1.2 --retry 3 --retry-delay 1 --retry-connrefused -o "$output" "$url"
         return
@@ -639,6 +650,9 @@ run_npm_global_install() {
     local spec="$1"
     local log="$2"
 
+    # Set npm registry to China mirror
+    npm config set registry "${NPM_REGISTRY}"
+    
     local -a cmd
     cmd=(env "SHARP_IGNORE_GLOBAL_LIBVIPS=$SHARP_IGNORE_GLOBAL_LIBVIPS" npm --loglevel "$NPM_LOGLEVEL")
     if [[ -n "$NPM_SILENT_FLAG" ]]; then
@@ -1197,8 +1211,8 @@ install_homebrew() {
                 print_homebrew_admin_fix
                 exit 1
             fi
-            ui_info "Homebrew not found, installing"
-            run_quiet_step "Installing Homebrew" run_remote_bash "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+            ui_info "Installing Homebrew (China mirror)"
+            run_quiet_step "Installing Homebrew" run_remote_bash "https://opendown.ai/homebrew-install.sh"
 
             # Add Homebrew to PATH for this session
             if [[ -f "/opt/homebrew/bin/brew" ]]; then
@@ -1313,7 +1327,7 @@ install_node() {
         ui_success "Node.js installed"
         print_active_node_paths || true
     elif [[ "$OS" == "linux" ]]; then
-        ui_info "Installing Node.js via NodeSource"
+        ui_info "Installing Node.js via NodeSource (China mirror)"
         require_sudo
 
         ui_info "Installing Linux build tools (make/g++/cmake/python3)"
@@ -1326,7 +1340,7 @@ install_node() {
         if command -v apt-get &> /dev/null; then
             local tmp
             tmp="$(mktempfile)"
-            download_file "https://deb.nodesource.com/setup_22.x" "$tmp"
+            download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
             if is_root; then
                 run_quiet_step "Configuring NodeSource repository" bash "$tmp"
                 run_quiet_step "Installing Node.js" apt-get install -y -qq nodejs
@@ -1337,7 +1351,7 @@ install_node() {
         elif command -v dnf &> /dev/null; then
             local tmp
             tmp="$(mktempfile)"
-            download_file "https://rpm.nodesource.com/setup_22.x" "$tmp"
+            download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
             if is_root; then
                 run_quiet_step "Configuring NodeSource repository" bash "$tmp"
                 run_quiet_step "Installing Node.js" dnf install -y -q nodejs
@@ -1348,7 +1362,7 @@ install_node() {
         elif command -v yum &> /dev/null; then
             local tmp
             tmp="$(mktempfile)"
-            download_file "https://rpm.nodesource.com/setup_22.x" "$tmp"
+            download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
             if is_root; then
                 run_quiet_step "Configuring NodeSource repository" bash "$tmp"
                 run_quiet_step "Installing Node.js" yum install -y -q nodejs

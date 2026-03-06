@@ -1,8 +1,28 @@
 <script setup lang="ts">
 import { useI18nStore } from '@/stores/i18n'
-import { Github, MessageCircle } from 'lucide-vue-next'
+import { Github, MessageCircle, Sun, Moon } from 'lucide-vue-next'
+import { ref, onMounted } from 'vue'
 
 const { t } = useI18nStore()
+
+const isDark = ref(true)
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  const theme = isDark.value ? 'dark' : 'light'
+  localStorage.setItem('theme', theme)
+  document.documentElement.setAttribute('data-theme', theme)
+}
+
+onMounted(() => {
+  const saved = localStorage.getItem('theme')
+  if (saved) {
+    isDark.value = saved === 'dark'
+    document.documentElement.setAttribute('data-theme', saved)
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark')
+  }
+})
 </script>
 
 <template>
@@ -23,7 +43,10 @@ const { t } = useI18nStore()
         <a href="https://discord.gg/gjGb5WEz" target="_blank" class="nav-link">Discord</a>
       </div>
       <div class="nav-theme-toggle">
-        <!-- Theme toggle will be added later if needed -->
+        <button class="theme-btn" @click="toggleTheme" title="Toggle theme">
+          <Sun v-if="!isDark" class="icon-sun" />
+          <Moon v-else class="icon-moon" />
+        </button>
       </div>
     </div>
   </header>
@@ -111,6 +134,45 @@ const { t } = useI18nStore()
 .nav-link:hover::after,
 .nav-link.active::after {
   transform: scaleX(1);
+}
+
+.nav-theme-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--text-primary);
+}
+
+.theme-btn .icon-sun,
+.theme-btn .icon-moon {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-sun {
+  display: block;
+}
+
+.icon-moon {
+  display: block;
 }
 
 @media (max-width: 768px) {
