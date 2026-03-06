@@ -17,8 +17,8 @@ const { t } = useI18nStore()
         <a href="https://opendown.ai" class="nav-logo-text">OpenDown</a>
       </div>
       <div class="nav-links">
-        <a href="/" class="nav-link active">Home</a>
-        <a href="https://claw.opendown.ai/" target="_blank" class="nav-link">OpenClaw Deploy</a>
+        <a href="https://opendown.ai" class="nav-link">Home</a>
+        <a href="/" class="nav-link active">OpenClaw Deploy</a>
         <a href="https://github.com/opendownai" target="_blank" class="nav-link">GitHub</a>
         <a href="https://discord.gg/gjGb5WEz" target="_blank" class="nav-link">Discord</a>
       </div>
