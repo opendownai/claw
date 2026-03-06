@@ -319,7 +319,7 @@ const installScript = computed(() => {
 ${configJson}
 EOF`
 
-  const bashScript = `set -e
+  const bashScript = `
 echo "====== Step 1: Create Config ======"
 ${configWrite}
 echo ""
@@ -382,7 +382,7 @@ ${openBrowser}
 `
   }
 
-  return `bash -c "${bashScriptEscaped}"`
+  return `sh -c "${bashScriptEscaped}"`
 })
 
 function selectScenario(scenario: Scenario) {
