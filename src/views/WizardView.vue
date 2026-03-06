@@ -319,70 +319,9 @@ const installScript = computed(() => {
 ${configJson}
 EOF`
 
-  const bashScript = `
-echo "====== Step 1: Create Config ======"
-${configWrite}
-echo ""
-echo "====== Step 2: Check Environment ======"
-if ! command -v node >/dev/null 2>&1; then
-    echo "Node.js not detected. Please install Node.js first."
-    exit 1
-fi
-echo "Node.js version: $(node -v)"
-echo ""
-echo "====== Step 3: Install OpenClaw ======"
-npm install -g openclaw@latest
-echo ""
-echo "====== Step 4: Install Skills ======"
-${skillsInstall}
-echo ""
-echo "====== Step 5: Start Service ======"
-${backgroundRun}
-echo "OpenClaw gateway started"
-echo "Server running at: http://127.0.0.1:18789"
-echo ""
-echo "Installation complete! Please open in browser"
-${openBrowser}`
-
-  const bashScriptEscaped = bashScript.replace(/"/g, '\\"').replace(/\n/g, '\\n')
-
-  if (isWindows) {
-    return `${shellHeader}
-
-echo ====== Step 1: Create Config ======
-if not exist "%USERPROFILE%\\.openclaw" mkdir "%USERPROFILE%\\.openclaw"
-${configWrite}
-
-echo.
-echo ====== Step 2: Check Environment ======
-node --version >nul 2>&1
-if errorlevel 1 (
-    echo Node.js not detected. Please install Node.js first.
-    exit /b 1
-)
-echo Node.js version: 
-node -v
-
-echo.
-echo ====== Step 3: Install OpenClaw ======
-npm install -g openclaw@latest
-
-echo.
-echo ====== Step 4: Install Skills ======
-${skillsInstall}
-
-echo.
-echo ====== Step 5: Start Service ======
-${backgroundRun}
-echo OpenClaw gateway started
-echo Server running at: http://127.0.0.1:18789
-echo.
-echo Installation complete! Please open in browser
-${openBrowser}
-`
-  }
-
-  return `sh -c "${bashScriptEscaped}"`
+  const installCommand = `curl -sL https://opendown.ai/install.sh | bash -s -- --api-key "${apiKey.value}" --provider "${apiKeyProvider.value}"`
+  
+  return installCommand
 })
 
 function selectScenario(scenario: Scenario) {

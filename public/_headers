@@ -8,3 +8,6 @@
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
+
+/*.sh
+  Content-Type: application/x-sh
