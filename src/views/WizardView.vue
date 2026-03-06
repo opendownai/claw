@@ -353,18 +353,18 @@ ${openBrowser}
 `
   }
 
-  return `#!/usr/bin/env bash
+  return `#!/bin/bash
 set -e
 
 echo "====== Step 1: Create Config ======"
 mkdir -p ~/.openclaw
-cat > ~/.openclaw/openclaw.json << 'EOFCONFIG'
+cat > ~/.openclaw/openclaw.json << 'EOF'
 ${configJson}
-EOFCONFIG
+EOF
 
 echo ""
 echo "====== Step 2: Check Environment ======"
-if ! command -v node &> /dev/null; then
+if ! command -v node >/dev/null 2>&1; then
     echo "Node.js not detected. Please install Node.js first."
     exit 1
 fi
