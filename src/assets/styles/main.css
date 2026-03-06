@@ -22,22 +22,22 @@ body {
 
 /* Base theme colors for immediate rendering */
 html {
-  background: #f5f5f7;
-  color: #1d1d1f;
+  background: #ffffff;
+  color: #111827;
 }
 
 /* Light theme */
 :root {
-  --bg-primary: #f5f5f7;
-  --bg-secondary: #ffffff;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
   --bg-card: #ffffff;
   --accent-blue: #6366f1;
   --accent-blue-dim: #4f46e5;
   --accent-green: #22c55e;
   --accent-green-dim: #16a34a;
-  --text-primary: #1d1d1f;
-  --text-secondary: #6e6e73;
-  --text-tertiary: #6e6e73;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #6b7280;
   --border-color: rgba(0, 0, 0, 0.1);
   --border-color-light: rgba(0, 0, 0, 0.08);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
