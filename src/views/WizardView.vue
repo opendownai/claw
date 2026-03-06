@@ -296,8 +296,8 @@ const installScript = computed(() => {
   const isWindows = typeof window !== 'undefined' && navigator.platform.toLowerCase().includes('win')
   
   const shellHeader = isWindows 
-    ? '@echo off\r\nrem Windows PowerShell/CMD\r\n'
-    : '#!/usr/bin/env bash'
+    ? '@echo off\r\nrem Windows CMD\r\n'
+    : '#!/bin/bash'
 
   const openBrowser = isWindows
     ? 'start http://127.0.0.1:18789'
