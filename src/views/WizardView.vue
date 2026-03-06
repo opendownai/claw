@@ -42,9 +42,9 @@ const providers: Provider[] = [
     id: 'aliyun',
     name: '阿里云百炼',
     nameEn: 'Alibaba Cloud',
-    description: '支持通义千问 Qwen3 系列模型',
-    descriptionEn: 'Supports Qwen3 series models',
-    consoleUrl: 'https://bailian.console.aliyun.com',
+    description: '推荐模型：qwen3.5-plus、kimi-k2.5、glm-5、MiniMax-M2.5',
+    descriptionEn: 'Recommended: qwen3.5-plus, kimi-k2.5, glm-5, MiniMax-M2.5',
+    consoleUrl: 'https://bailian.console.aliyun.com/cn-beijing/?tab=coding-plan#/efm/detail',
     apiKeyLabel: '阿里云百炼 API Key',
     apiKeyPlaceholder: 'sk-xxx...'
   },
@@ -52,11 +52,11 @@ const providers: Provider[] = [
     id: 'iflow',
     name: '心流 (iFlow)',
     nameEn: 'iFlow',
-    description: '支持 DeepSeek、Qwen3、GPT-4o、Claude 等多种模型',
-    descriptionEn: 'Supports DeepSeek, Qwen3, GPT-4o, Claude and more',
+    description: '支持 Qwen3、DeepSeek-R1、Kimi K2 等多种模型',
+    descriptionEn: 'Supports Qwen3, DeepSeek-R1, Kimi K2 and more models',
     consoleUrl: 'https://platform.iflow.cn/profile?tab=apiKey',
     apiKeyLabel: '心流 API Key',
-    apiKeyPlaceholder: 'iflow_xxx...'
+    apiKeyPlaceholder: 'sk-xxx...'
   }
 ]
 
@@ -76,6 +76,7 @@ const selectedScenario = ref<Scenario | null>(null)
 const copied = ref(false)
 const showHelp = ref(false)
 const isWindows = ref(typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('win'))
+const alreadyInstalled = ref(false)
 
 const step2TerminalText = computed(() => {
   return isWindows.value ? t.step2TerminalWindows : t.step2Terminal
@@ -323,9 +324,16 @@ EOF`
   const channelsConfig = Object.fromEntries(channelManager.value.getEnabledChannels().filter(c => c.id !== 'web').map(c => [c.id, { enabled: true, ...c.config }]))
   const channelsJson = btoa(JSON.stringify(channelsConfig))
   
-  const installCommand = `curl -fsSL https://opendown.ai/cinstall.sh | bash -s && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak && cat > ~/.openclaw/openclaw.json << 'EOF'
+  let installCommand: string
+  if (alreadyInstalled.value) {
+    installCommand = `mkdir -p ~/.openclaw && cat > ~/.openclaw/openclaw.json << 'EOF'
 ${configJson}
 EOF`
+  } else {
+    installCommand = `curl -fsSL https://opendown.ai/cinstall.sh | bash -s && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak && cat > ~/.openclaw/openclaw.json << 'EOF'
+${configJson}
+EOF`
+  }
   
   return installCommand
 })
@@ -503,6 +511,13 @@ onMounted(() => {
       <div v-if="step === 4" class="step-content">
         <button @click="step = 3" class="back-btn">{{ t.backToChannels }}</button>
         <h2 class="step-title">{{ t.step4Title }}</h2>
+        
+        <div class="already-installed-check">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="alreadyInstalled" class="checkbox-input">
+            <span class="checkbox-text">{{ language === 'zh' ? '我已安装 OpenClaw，只需写入配置文件' : 'I already have OpenClaw installed, just write config file' }}</span>
+          </label>
+        </div>
         
         <div class="install-steps card-apple">
           <div class="install-step">
@@ -980,6 +995,38 @@ onMounted(() => {
 
 .step-num.success {
   background: var(--accent-green);
+}
+
+.already-installed-check {
+  margin-bottom: 24px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
+}
+
+.checkbox-label:hover {
+  border-color: var(--accent-blue);
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
 .copy-btn {
