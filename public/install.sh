@@ -81,9 +81,15 @@ install_node_macos() {
         if [ ! -d "$NVM_DIR" ]; then
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
         fi
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 22
-        nvm use 22
+        if [ -s "$NVM_DIR/nvm.sh" ]; then
+            export NVM_DIR="$HOME/.nvm"
+            . "$NVM_DIR/nvm.sh"
+            nvm install 22
+            nvm use 22
+        else
+            echo "Error: Failed to install nvm. Please install Node.js manually: https://nodejs.org"
+            exit 1
+        fi
     fi
 }
 
@@ -94,21 +100,27 @@ install_node_linux() {
         if [ ! -d "$NVM_DIR" ]; then
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
         fi
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 22
-        nvm use 22
-    else
-        echo "Installing Node.js via NodeSource..."
-        if command -v apt-get &> /dev/null; then
-            curl -fsSL https://deb.nodesource.com/setup_22.x | bash -E
-            apt-get install -y nodejs
-        elif command -v dnf &> /dev/null; then
-            curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -E
-            dnf install -y nodejs
+        if [ -s "$NVM_DIR/nvm.sh" ]; then
+            export NVM_DIR="$HOME/.nvm"
+            . "$NVM_DIR/nvm.sh"
+            nvm install 22
+            nvm use 22
         else
-            echo "Error: Could not install Node.js automatically. Please install manually: https://nodejs.org"
-            exit 1
+            echo "Installing Node.js via NodeSource..."
+            if command -v apt-get &> /dev/null; then
+                curl -fsSL https://deb.nodesource.com/setup_22.x | bash -E
+                apt-get install -y nodejs
+            elif command -v dnf &> /dev/null; then
+                curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -E
+                dnf install -y nodejs
+            else
+                echo "Error: Could not install Node.js automatically. Please install manually: https://nodejs.org"
+                exit 1
+            fi
         fi
+    else
+        echo "Error: curl not found. Please install Node.js manually: https://nodejs.org"
+        exit 1
     fi
 }
 
