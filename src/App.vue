@@ -6,6 +6,9 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 
 <template>
   <div class="app">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
     <AppHeader />
     <main class="main-content">
       <RouterView />
@@ -19,9 +22,13 @@ import AppFooter from '@/components/layout/AppFooter.vue'
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .main-content {
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 </style>
