@@ -32,7 +32,7 @@ done
 
 if [[ -z "$API_KEY" ]]; then
     echo "Error: --api-key is required"
-    echo "Usage: curl -fsSL https://opendown.ai/install.sh | bash -s -- --api-key YOUR_API_KEY --provider minimax"
+    echo "Usage: curl -fsSL https://cdn.opendown.ai/install.sh | bash -s -- --api-key YOUR_API_KEY --provider minimax"
     exit 1
 fi
 
@@ -47,12 +47,93 @@ echo "Provider: $PROVIDER"
 
 echo ""
 echo "====== Step 1: Check Node.js ======"
-if ! command -v node &> /dev/null; then
-    echo "Node.js not found. Installing via Homebrew..."
+
+detect_os() {
+    case "$(uname -s 2>/dev/null || true)" in
+        Darwin) echo "macos" ;;
+        Linux) echo "linux" ;;
+        *) echo "unknown" ;;
+    esac
+}
+
+node_major_version() {
+    if ! command -v node &> /dev/null; then
+        return 1
+    fi
+    local version major
+    version="$(node -v 2>/dev/null || true)"
+    major="${version#v}"
+    major="${major%%.*}"
+    if [[ "$major" =~ ^[0-9]+$ ]]; then
+        echo "$major"
+        return 0
+    fi
+    return 1
+}
+
+install_node_macos() {
     if command -v brew &> /dev/null; then
         brew install node@22
+        brew link node@22 --overwrite --force 2>/dev/null || true
     else
-        echo "Error: Homebrew not found. Please install Node.js manually: https://nodejs.org"
+        echo "Installing Node.js via nvm..."
+        export NVM_DIR="$HOME/.nvm"
+        if [ ! -d "$NVM_DIR" ]; then
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+        fi
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install 22
+        nvm use 22
+    fi
+}
+
+install_node_linux() {
+    if command -v curl &> /dev/null; then
+        echo "Installing Node.js via nvm..."
+        export NVM_DIR="$HOME/.nvm"
+        if [ ! -d "$NVM_DIR" ]; then
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+        fi
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install 22
+        nvm use 22
+    else
+        echo "Installing Node.js via NodeSource..."
+        if command -v apt-get &> /dev/null; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | bash -E
+            apt-get install -y nodejs
+        elif command -v dnf &> /dev/null; then
+            curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -E
+            dnf install -y nodejs
+        else
+            echo "Error: Could not install Node.js automatically. Please install manually: https://nodejs.org"
+            exit 1
+        fi
+    fi
+}
+
+OS=$(detect_os)
+
+if command -v node &> /dev/null; then
+    NODE_VERSION=$(node_major_version || true)
+    if [[ -n "$NODE_VERSION" && "$NODE_VERSION" -ge 18 ]]; then
+        echo "Node.js $(node -v) found"
+    else
+        echo "Node.js version too old, upgrading..."
+        if [[ "$OS" == "macos" ]]; then
+            install_node_macos
+        elif [[ "$OS" == "linux" ]]; then
+            install_node_linux
+        fi
+    fi
+else
+    echo "Node.js not found, installing..."
+    if [[ "$OS" == "macos" ]]; then
+        install_node_macos
+    elif [[ "$OS" == "linux" ]]; then
+        install_node_linux
+    else
+        echo "Error: Unsupported OS. Please install Node.js manually: https://nodejs.org"
         exit 1
     fi
 fi
