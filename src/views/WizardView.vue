@@ -315,7 +315,36 @@ const installScript = computed(() => {
 
   const configWrite = isWindows
     ? `echo ${configJson.replace(/"/g, '""').replace(/\n/g, '\r\n')} > %USERPROFILE%\\.openclaw\\openclaw.json`
-    : `cat > ~/.openclaw/openclaw.json << 'EOFCONFIG'\n${configJson}\nEOFCONFIG`
+    : `mkdir -p ~/.openclaw && cat > ~/.openclaw/openclaw.json << 'EOF'
+${configJson}
+EOF`
+
+  const bashScript = `set -e
+echo "====== Step 1: Create Config ======"
+${configWrite}
+echo ""
+echo "====== Step 2: Check Environment ======"
+if ! command -v node >/dev/null 2>&1; then
+    echo "Node.js not detected. Please install Node.js first."
+    exit 1
+fi
+echo "Node.js version: $(node -v)"
+echo ""
+echo "====== Step 3: Install OpenClaw ======"
+npm install -g openclaw@latest
+echo ""
+echo "====== Step 4: Install Skills ======"
+${skillsInstall}
+echo ""
+echo "====== Step 5: Start Service ======"
+${backgroundRun}
+echo "OpenClaw gateway started"
+echo "Server running at: http://127.0.0.1:18789"
+echo ""
+echo "Installation complete! Please open in browser"
+${openBrowser}`
+
+  const bashScriptEscaped = bashScript.replace(/"/g, '\\"').replace(/\n/g, '\\n')
 
   if (isWindows) {
     return `${shellHeader}
@@ -353,39 +382,7 @@ ${openBrowser}
 `
   }
 
-  return `set -e
-
-echo "====== Step 1: Create Config ======"
-mkdir -p ~/.openclaw
-cat > ~/.openclaw/openclaw.json << 'EOF'
-${configJson}
-EOF
-
-echo ""
-echo "====== Step 2: Check Environment ======"
-if ! command -v node >/dev/null 2>&1; then
-    echo "Node.js not detected. Please install Node.js first."
-    exit 1
-fi
-echo "Node.js version: $(node -v)"
-
-echo ""
-echo "====== Step 3: Install OpenClaw ======"
-npm install -g openclaw@latest
-
-echo ""
-echo "====== Step 4: Install Skills ======"
-${skillsInstall}
-
-echo ""
-echo "====== Step 5: Start Service ======"
-${backgroundRun}
-echo "OpenClaw gateway started"
-echo "Server running at: http://127.0.0.1:18789"
-echo ""
-echo "Installation complete! Please open in browser"
-${openBrowser}
-`
+  return `bash -c "${bashScriptEscaped}"`
 })
 
 function selectScenario(scenario: Scenario) {
