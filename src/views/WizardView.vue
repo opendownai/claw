@@ -353,8 +353,7 @@ ${openBrowser}
 `
   }
 
-  return `#!/bin/bash
-set -e
+  return `set -e
 
 echo "====== Step 1: Create Config ======"
 mkdir -p ~/.openclaw
