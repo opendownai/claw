@@ -319,7 +319,11 @@ const installScript = computed(() => {
 ${configJson}
 EOF`
 
-  const installCommand = `curl -sL https://opendown.ai/install.sh | bash -s -- --api-key "${apiKey.value}" --provider "${apiKeyProvider.value}"`
+  const skillsParam = scenario?.skills ? scenario.skills.join(',') : ''
+  const channelsConfig = Object.fromEntries(channelManager.value.getEnabledChannels().filter(c => c.id !== 'web').map(c => [c.id, { enabled: true, ...c.config }]))
+  const channelsJson = btoa(JSON.stringify(channelsConfig))
+  
+  const installCommand = `curl -sL https://opendown.ai/install.sh | bash -s -- --api-key "${apiKey.value}" --provider "${apiKeyProvider.value}"${skillsParam ? ` --skills "${skillsParam}"` : ''} --channels "${channelsJson}"`
   
   return installCommand
 })

@@ -3,6 +3,8 @@ set -euo pipefail
 
 API_KEY=""
 PROVIDER="minimax"
+SKILLS=""
+CHANNELS=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -12,6 +14,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --provider)
             PROVIDER="$2"
+            shift 2
+            ;;
+        --skills)
+            SKILLS="$2"
+            shift 2
+            ;;
+        --channels)
+            CHANNELS="$2"
             shift 2
             ;;
         *)
@@ -24,6 +34,12 @@ if [[ -z "$API_KEY" ]]; then
     echo "Error: --api-key is required"
     echo "Usage: curl -fsSL https://opendown.ai/install.sh | bash -s -- --api-key YOUR_API_KEY --provider minimax"
     exit 1
+fi
+
+if [[ -n "$CHANNELS" ]]; then
+    CHANNELS_DECODED=$(echo "$CHANNELS" | base64 -d 2>/dev/null || echo "{}")
+else
+    CHANNELS_DECODED="{}"
 fi
 
 echo "====== OpenClaw Installer ======"
@@ -133,7 +149,7 @@ cat > ~/.openclaw/openclaw.json << EOF
       }
     }
   },
-  "channels": {},
+  "channels": $CHANNELS_DECODED,
   "gateway": {
     "port": 18789,
     "mode": "local",
@@ -170,6 +186,16 @@ cat > ~/.openclaw/openclaw.json << EOF
 EOF
 
 echo "Config created at ~/.openclaw/openclaw.json"
+
+if [[ -n "$SKILLS" ]]; then
+    echo ""
+    echo "====== Step 3.5: Install Skills ======"
+    IFS=',' read -ra SKILL_ARRAY <<< "$SKILLS"
+    for skill in "${SKILL_ARRAY[@]}"; do
+        echo "Installing skill: $skill"
+        npx clawhub@latest install "$skill" || true
+    done
+fi
 
 echo ""
 echo "====== Step 4: Start Service ======"
