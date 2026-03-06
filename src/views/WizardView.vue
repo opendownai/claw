@@ -591,16 +591,19 @@ onMounted(() => {
   background: var(--border-color);
   color: var(--text-tertiary);
   transition: all 0.2s;
+  border: 2px solid var(--border-color);
 }
 
 .step-circle.active {
   background: var(--accent-blue);
   color: white;
+  border-color: var(--accent-blue);
 }
 
 .step-circle.completed {
   background: var(--accent-green);
   color: white;
+  border-color: var(--accent-green);
 }
 
 .step-icon {
@@ -612,6 +615,7 @@ onMounted(() => {
   width: 40px;
   height: 3px;
   background: var(--border-color);
+  transition: all 0.2s;
 }
 
 .step-line.active {
