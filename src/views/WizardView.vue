@@ -472,7 +472,9 @@ onMounted(() => {
 
       <div class="wizard-actions">
         <a href="https://xhslink.com/o/9xDi3Ca4uSD" target="_blank" class="action-btn">
-          <img src="https://picasso-static.xiaohongshu.com/fe-platform/f43dc4a8baf03678996c62d8db6ebc01a82256ff.png" alt="Xiaohongshu" class="icon xhs-icon" />
+          <svg viewBox="0 0 24 24" fill="#E6002A" class="icon">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
           {{ language === 'zh' ? '小红书' : 'Xiaohongshu' }}
         </a>
         <button @click="showHelp = !showHelp" class="action-btn">
@@ -791,12 +793,6 @@ onMounted(() => {
 .action-btn .icon {
   width: 16px;
   height: 16px;
-}
-
-.action-btn .xhs-icon {
-  width: 16px;
-  height: 16px;
-  object-fit: contain;
 }
 
 .faq-section {
