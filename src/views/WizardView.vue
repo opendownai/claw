@@ -1218,6 +1218,8 @@ onMounted(() => {
 
 .next-btn:hover:not(:disabled) {
   background: var(--accent-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 132, 255, 0.25);
 }
 
 .next-btn:disabled {

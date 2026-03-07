@@ -1212,6 +1212,11 @@ install_homebrew() {
                 exit 1
             fi
             ui_info "Installing Homebrew (China mirror)"
+            # Use environment variables to set mirror for Homebrew installation
+            export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
+            export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
+            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
+            
             run_quiet_step "Installing Homebrew" run_remote_bash "https://opendown.ai/homebrew-install.sh"
 
             # Add Homebrew to PATH for this session
@@ -1319,6 +1324,8 @@ check_node() {
 install_node() {
     if [[ "$OS" == "macos" ]]; then
         ui_info "Installing Node.js via Homebrew"
+        # Set Homebrew mirror environment variables
+        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
         run_quiet_step "Installing node@22" brew install node@22
         brew link node@22 --overwrite --force 2>/dev/null || true
         if ! ensure_macos_node22_active; then
@@ -1471,6 +1478,8 @@ require_sudo() {
 
 install_git() {
     if [[ "$OS" == "macos" ]]; then
+        # Set Homebrew mirror for Git installation
+        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
         run_quiet_step "Installing Git" brew install git
     elif [[ "$OS" == "linux" ]]; then
         require_sudo
