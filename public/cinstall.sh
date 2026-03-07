@@ -1212,10 +1212,10 @@ install_homebrew() {
                 exit 1
             fi
             ui_info "Installing Homebrew (China mirror)"
-            # Use Tencent Cloud mirror which is often faster
-            export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.cloud.tencent.com/homebrew/brew.git"
-            export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.cloud.tencent.com/homebrew/homebrew-core.git"
-            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.cloud.tencent.com/homebrew-bottles"
+            # Use Alibaba Cloud mirror which is verified to exist
+            export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"
+            export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"
+            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles"
             
             # Ensure PATH includes standard directories for compatibility
             export PATH="/usr/local/bin:/opt/homebrew/bin:/bin:/usr/bin:$PATH"
@@ -1327,8 +1327,8 @@ check_node() {
 install_node() {
     if [[ "$OS" == "macos" ]]; then
         ui_info "Installing Node.js via Homebrew (optimized with mirrors)"
-        # Set Homebrew mirror environment variables - use Tencent which is often faster
-        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.cloud.tencent.com/homebrew-bottles"
+        # Set Homebrew mirror environment variables - use Alibaba Cloud which is verified
+        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles"
         # Also configure npm registry for any npm operations during installation
         npm config set registry "${NPM_REGISTRY}" 2>/dev/null || true
         run_quiet_step "Installing node@22" brew install node@22
