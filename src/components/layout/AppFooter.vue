@@ -9,7 +9,7 @@ const { t } = useI18nStore()
   <footer class="footer">
     <div class="footer-main">
       <div class="footer-links">
-        <a href="https://github.com/opendownai" target="_blank">GitHub</a>
+        <a href="https://github.com/opendownai/claw" target="_blank">GitHub</a>
         <a href="https://discord.gg/gjGb5WEz" target="_blank">Discord</a>
         <a href="https://opendown.ai/docs" target="_blank">Docs</a>
         <a href="https://claw.opendown.ai/" target="_blank">OpenClaw Deploy</a>

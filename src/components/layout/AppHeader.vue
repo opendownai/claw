@@ -39,7 +39,7 @@ onMounted(() => {
       <div class="nav-links">
         <a href="https://opendown.ai" class="nav-link">Home</a>
         <a href="/" class="nav-link active">OpenClaw Deploy</a>
-        <a href="https://github.com/opendownai" target="_blank" class="nav-link">GitHub</a>
+        <a href="https://github.com/opendownai/claw" target="_blank" class="nav-link">GitHub</a>
         <a href="https://discord.gg/gjGb5WEz" target="_blank" class="nav-link">Discord</a>
       </div>
       <div class="nav-theme-toggle">
