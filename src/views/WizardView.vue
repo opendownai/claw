@@ -23,6 +23,7 @@ interface Provider {
   consoleUrl: string
   apiKeyLabel: string
   apiKeyPlaceholder: string
+  logo?: string
   recommended?: boolean
 }
 
@@ -36,6 +37,7 @@ const providers: Provider[] = [
     consoleUrl: 'https://platform.minimaxi.com/user-center/basic-information/interface-key',
     apiKeyLabel: 'MiniMax API Key',
     apiKeyPlaceholder: 'sk-xxx...',
+    logo: '<svg role="img" viewBox="0 0 24 24" fill="#2563EB" xmlns="http://www.w3.org/2000/svg"><title>MiniMax</title><path d="M11.43 3.92a.86.86 0 1 0-1.718 0v14.236a1.999 1.999 0 0 1-3.997 0V9.022a.86.86 0 1 0-1.718 0v3.87a1.999 1.999 0 0 1-3.997 0V11.49a.57.57 0 0 1 1.139 0v1.404a.86.86 0 0 0 1.719 0V9.022a1.999 1.999 0 0 1 3.997 0v9.134a.86.86 0 0 0 1.719 0V3.92a1.998 1.998 0 1 1 3.996 0v11.788a.57.57 0 1 1-1.139 0zm10.572 3.105a2 2 0 0 0-1.999 1.997v7.63a.86.86 0 0 1-1.718 0V3.923a1.999 1.999 0 0 0-3.997 0v16.16a.86.86 0 0 1-1.719 0V18.08a.57.57 0 1 0-1.138 0v2a1.998 1.998 0 0 0 3.996 0V3.92a.86.86 0 0 1 1.719 0v12.73a1.999 1.999 0 0 0 3.996 0V9.023a.86.86 0 1 1 1.72 0v6.686a.57.57 0 0 0 1.138 0V9.022a2 2 0 0 0-1.998-1.997"/></svg>',
     recommended: true
   },
   {
@@ -46,7 +48,8 @@ const providers: Provider[] = [
     descriptionEn: 'Recommended: qwen3.5-plus, kimi-k2.5, glm-5, MiniMax-M2.5',
     consoleUrl: 'https://bailian.console.aliyun.com/cn-beijing/?tab=coding-plan#/efm/detail',
     apiKeyLabel: '阿里云百炼 API Key',
-    apiKeyPlaceholder: 'sk-xxx...'
+    apiKeyPlaceholder: 'sk-xxx...',
+    logo: 'https://gw.alicdn.com/imgextra/i4/O1CN01vVn7g32134zNZEeAR_!!6000000006928-55-tps-24-24.svg'
   },
   {
     id: 'iflow',
@@ -56,7 +59,8 @@ const providers: Provider[] = [
     descriptionEn: 'Supports Qwen3, DeepSeek-R1, Kimi K2 and more models',
     consoleUrl: 'https://platform.iflow.cn/profile?tab=apiKey',
     apiKeyLabel: '心流 API Key',
-    apiKeyPlaceholder: 'sk-xxx...'
+    apiKeyPlaceholder: 'sk-xxx...',
+    logo: 'https://img.alicdn.com/imgextra/i1/O1CN01nulwex1q7Eq1TVqUh_!!6000000005448-55-tps-32-32.svg'
   }
 ]
 
@@ -499,6 +503,7 @@ onMounted(() => {
             class="provider-tab"
             :class="{ active: apiKeyProvider === provider.id }"
           >
+            <span v-if="provider.logo" class="provider-logo" v-html="provider.logo"></span>
             <span class="provider-tab-name">{{ language === 'zh' ? provider.name : provider.nameEn }}</span>
             <span v-if="provider.recommended" class="provider-tab-badge">Recommended</span>
           </button>
@@ -919,6 +924,26 @@ onMounted(() => {
 .provider-tab-name {
   font-weight: 500;
   color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.provider-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+}
+
+.provider-logo :deep(svg) {
+  width: 100%;
+  height: 100%;
+}
+
+.provider-logo :deep(img) {
+  width: 100%;
+  height: 100%;
 }
 
 .provider-tab-badge {
