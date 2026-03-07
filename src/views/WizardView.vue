@@ -90,6 +90,7 @@ const alreadyInstalled = ref(false)
 const commandCopied = ref(false)
 const commandExpanded = ref(false)
 const channelsExpanded = ref(false)
+const step1Copied = ref(false)
 
 const step2TerminalText = computed(() => {
   return isWindows.value ? t.step2TerminalWindows : t.step2Terminal
@@ -426,9 +427,11 @@ function copyCommand() {
   navigator.clipboard.writeText(installScript.value).then(() => {
     copied.value = true
     commandCopied.value = true
+    step1Copied.value = true
     setTimeout(() => {
       copied.value = false
       commandCopied.value = false
+      step1Copied.value = false
     }, 2000)
   })
 }
@@ -629,9 +632,10 @@ onMounted(() => {
         </div>
         
         <div class="install-steps card-apple">
-          <div class="install-step">
+          <div class="install-step clickable" @click="copyCommand">
             <span class="step-num">1</span>
-            <span>{{ t.step1Copy }}</span>
+            <span v-if="step1Copied" class="step-copied">{{ language === 'zh' ? '✓ 已复制' : '✓ Copied' }}</span>
+            <span v-else>{{ t.step1Copy }}</span>
           </div>
           <div class="install-step">
             <span class="step-num">2</span>
@@ -642,7 +646,10 @@ onMounted(() => {
           </div>
           <div class="install-step">
             <span class="step-num">3</span>
-            <span>{{ t.step3Run }}</span>
+            <div class="step-2-content">
+              <KeySequence type="paste" />
+              <span class="step-2-text">{{ t.step3Run }}</span>
+            </div>
           </div>
           <div class="install-step">
             <span class="step-num success">✓</span>
@@ -656,19 +663,9 @@ onMounted(() => {
               <ChevronDown class="expand-icon" :class="{ expanded: commandExpanded }" />
               <span class="command-title">{{ language === 'zh' ? '安装命令预览' : 'Install Command Preview' }}</span>
             </button>
-            <button @click="copyCommand" class="copy-command-btn" :title="language === 'zh' ? '复制命令' : 'Copy command'">
-              <Copy v-if="!commandCopied" class="copy-icon" />
-              <Check v-else class="copy-icon" />
-            </button>
           </div>
           <pre v-show="commandExpanded" class="command-content">{{ installScript }}</pre>
         </div>
-
-        <button @click="copyCommand" class="btn btn-primary copy-btn">
-          <Check v-if="copied" class="btn-icon" />
-          <Copy v-else class="btn-icon" />
-          {{ copied ? t.copied : t.copyCommand }}
-        </button>
 
         <p class="install-hint">
           {{ isWindows 
@@ -1196,6 +1193,23 @@ onMounted(() => {
   padding: 8px 0;
   font-size: 14px;
   color: var(--text-secondary);
+}
+
+.install-step.clickable {
+  cursor: pointer;
+  padding: 8px 12px;
+  margin: 0 -12px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.install-step.clickable:hover {
+  background: var(--bg-secondary);
+}
+
+.step-copied {
+  color: var(--accent-green);
+  font-weight: 500;
 }
 
 .step-2-content {

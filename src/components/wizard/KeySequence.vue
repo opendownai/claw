@@ -3,6 +3,10 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18nStore } from '@/stores/i18n'
 
+defineProps<{
+  type?: 'terminal' | 'paste'
+}>()
+
 const { language } = storeToRefs(useI18nStore())
 
 const isWindows = computed(() => {
@@ -12,20 +16,38 @@ const isWindows = computed(() => {
 
 <template>
   <div class="key-sequence" :class="{ windows: isWindows }">
-    <template v-if="!isWindows">
-      <span class="key cmd">⌘</span>
-      <span class="plus">+</span>
-      <span class="key space">空格</span>
-      <span class="arrow">→</span>
-      <span class="key terminal">terminal</span>
-      <span class="arrow">↩</span>
+    <template v-if="type === 'paste'">
+      <template v-if="!isWindows">
+        <span class="key cmd">⌘</span>
+        <span class="plus">+</span>
+        <span class="key v">V</span>
+        <span class="arrow">→</span>
+        <span class="key enter">↩</span>
+      </template>
+      <template v-else>
+        <span class="key ctrl">Ctrl</span>
+        <span class="plus">+</span>
+        <span class="key v">V</span>
+        <span class="arrow">→</span>
+        <span class="key enter">↩</span>
+      </template>
     </template>
     <template v-else>
-      <span class="key win">⊞</span>
-      <span class="plus">+</span>
-      <span class="key x">X</span>
-      <span class="arrow">→</span>
-      <span class="key select">{{ language === 'zh' ? '选择 Terminal' : 'Select Terminal' }}</span>
+      <template v-if="!isWindows">
+        <span class="key cmd">⌘</span>
+        <span class="plus">+</span>
+        <span class="key space">空格</span>
+        <span class="arrow">→</span>
+        <span class="key terminal">terminal</span>
+        <span class="arrow">↩</span>
+      </template>
+      <template v-else>
+        <span class="key win">⊞</span>
+        <span class="plus">+</span>
+        <span class="key x">X</span>
+        <span class="arrow">→</span>
+        <span class="key select">{{ language === 'zh' ? '选择 Terminal' : 'Select Terminal' }}</span>
+      </template>
     </template>
   </div>
 </template>
@@ -63,7 +85,7 @@ const isWindows = computed(() => {
   padding: 4px 14px;
 }
 
-.key.terminal {
+.key.terminal, .key.enter {
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dim));
   color: white;
   border-color: var(--accent-blue);
@@ -82,6 +104,14 @@ const isWindows = computed(() => {
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dim));
   color: white;
   border-color: var(--accent-blue);
+}
+
+.key.ctrl {
+  font-size: 12px;
+}
+
+.key.v {
+  font-weight: 700;
 }
 
 .plus,
