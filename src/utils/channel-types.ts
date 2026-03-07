@@ -37,8 +37,8 @@ export const channelOptions: ChannelOption[] = [
     id: 'web',
     name: 'Web界面',
     nameEn: 'Web Interface',
-    description: '通过 DownClaw Web 界面进行交互',
-    descriptionEn: 'Interact through DownClaw Web UI',
+    description: '通过 OpenClaw Web 界面进行交互',
+    descriptionEn: 'Interact through OpenClaw Web UI',
     icon: 'globe',
     color: '#6366f1',
     configFields: []
