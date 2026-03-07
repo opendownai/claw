@@ -252,9 +252,9 @@ const installScript = computed(() => {
   if (apiKeyProvider.value === 'minimax') {
     providerConfig = {
       minimax: {
-        baseUrl: "https://api.minimax.io/anthropic",
+        baseUrl: "https://api.minimaxi.com/v1",
         apiKey: apiKey.value,
-        api: "anthropic-messages",
+        api: "openai-completions",
         models: minimaxModels
       }
     }
