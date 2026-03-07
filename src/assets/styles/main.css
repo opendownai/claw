@@ -33,6 +33,7 @@ html {
   --bg-card: #ffffff;
   --accent-blue: #6366f1;
   --accent-blue-dim: #4f46e5;
+  --accent-blue-hover: #4f46e5;
   --accent-green: #22c55e;
   --accent-green-dim: #16a34a;
   --text-primary: #111827;
@@ -52,6 +53,7 @@ html {
   --bg-card: #111111;
   --accent-blue: #6366f1;
   --accent-blue-dim: #4f46e5;
+  --accent-blue-hover: #818cf8;
   --accent-green: #22c55e;
   --accent-green-dim: #16a34a;
   --text-primary: #e0e0e0;
@@ -77,6 +79,7 @@ html {
     --bg-card: #111111;
     --accent-blue: #6366f1;
     --accent-blue-dim: #4f46e5;
+    --accent-blue-hover: #818cf8;
     --accent-green: #22c55e;
     --accent-green-dim: #16a34a;
     --text-primary: #e0e0e0;
