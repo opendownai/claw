@@ -625,9 +625,9 @@ onMounted(() => {
         <h2 class="step-title">{{ t.step4Title }}</h2>
         
         <div class="already-installed-check">
-          <label class="checkbox-label">
+          <label class="checkbox-label" :title="language === 'zh' ? '勾选后将跳过 OpenClaw CLI 安装脚本，但仍会执行：写入配置文件 → 安装技能 → 重启服务 → 打开浏览器' : 'Skip OpenClaw CLI install script, but still execute: write config → install skills → restart service → open browser'">
             <input type="checkbox" v-model="alreadyInstalled" class="checkbox-input">
-            <span class="checkbox-text">{{ language === 'zh' ? '我已安装 OpenClaw，只需写入配置文件' : 'I already have OpenClaw installed, just write config file' }}</span>
+            <span class="checkbox-text">{{ language === 'zh' ? '我已安装，只需更新配置（仍会安装 skills 和重启服务）' : 'Already installed, just update config (skills install & service restart still required)' }}</span>
           </label>
         </div>
         
