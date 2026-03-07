@@ -216,20 +216,66 @@ const installScript = computed(() => {
 
   const scenario = scenarios.find(s => s.id === selectedScenario.value?.id)
 
-  const getIflowModels = () => {
-    return [
-      { id: "TBStars2-200B-A13B", name: "TBStars2-200B-A13B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "DeepSeek-V3-0324", name: "DeepSeek-V3-0324", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "DeepSeek-R1-0528", name: "DeepSeek-R1-0528", reasoning: true, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "Qwen3-235B-A22B", name: "Qwen3-235B-A22B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "Qwen3-32B", name: "Qwen3-32B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "DeepSeek-V3", name: "DeepSeek-V3", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "DeepSeek-R1", name: "DeepSeek-R1", reasoning: true, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "GPT-4o", name: "GPT-4o", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "Claude-3.7-Sonnet", name: "Claude-3.7-Sonnet", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-      { id: "Gemini-2.5-Pro", name: "Gemini-2.5-Pro", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
-    ]
+  const bailianModels = [
+    { id: "qwen3.5-plus", name: "qwen3.5-plus", api: "openai-completions", reasoning: false, input: ["text", "image"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+    { id: "qwen3-max-2026-01-23", name: "qwen3-max-2026-01-23", api: "openai-completions", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 262144, maxTokens: 65536 },
+    { id: "qwen3-coder-next", name: "qwen3-coder-next", api: "openai-completions", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 262144, maxTokens: 65536 },
+    { id: "qwen3-coder-plus", name: "qwen3-coder-plus", api: "openai-completions", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+    { id: "MiniMax-M2.5", name: "MiniMax-M2.5", api: "openai-completions", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+    { id: "glm-5", name: "glm-5", api: "openai-completions", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 202752, maxTokens: 16384 },
+    { id: "glm-4.7", name: "glm-4.7", api: "openai-completions", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 202752, maxTokens: 16384 },
+    { id: "kimi-k2.5", name: "kimi-k2.5", api: "openai-completions", reasoning: false, input: ["text", "image"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 262144, maxTokens: 32768 },
+  ]
+
+  const iflowModels = [
+    { id: "qwen3-coder-plus", name: "qwen3-coder-plus", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+    { id: "iflow-rome-30ba3b", name: "iflow-rome-30ba3b", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+  ]
+
+  const minimaxModels = [
+    { id: "MiniMax-M2.5", name: "MiniMax-M2.5", api: "anthropic-messages", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+  ]
+
+  let providerConfig: any
+  let primaryModel: string
+
+  if (apiKeyProvider.value === 'minimax') {
+    providerConfig = {
+      minimax: {
+        baseUrl: "https://api.minimax.io/anthropic",
+        apiKey: apiKey.value,
+        api: "anthropic-messages",
+        models: minimaxModels
+      }
+    }
+    primaryModel = "minimax/MiniMax-M2.5"
+  } else if (apiKeyProvider.value === 'aliyun') {
+    providerConfig = {
+      bailian: {
+        baseUrl: "https://coding.dashscope.aliyuncs.com/v1",
+        apiKey: apiKey.value,
+        api: "openai-completions",
+        models: bailianModels
+      }
+    }
+    primaryModel = "bailian/qwen3.5-plus"
+  } else {
+    providerConfig = {
+      iflow: {
+        baseUrl: "https://apis.iflow.cn/v1",
+        apiKey: apiKey.value,
+        api: "openai-completions",
+        models: iflowModels
+      }
+    }
+    primaryModel = "iflow/iflow-rome-30ba3b"
   }
+
+  const modelConfigs = apiKeyProvider.value === 'minimax' 
+    ? Object.fromEntries(minimaxModels.map(m => [`minimax/${m.id}`, {}]))
+    : apiKeyProvider.value === 'aliyun'
+    ? Object.fromEntries(bailianModels.map(m => [`bailian/${m.id}`, {}]))
+    : Object.fromEntries(iflowModels.map(m => [`iflow/${m.id}`, {}]))
 
   const configObj = {
     meta: { 
@@ -240,54 +286,22 @@ const installScript = computed(() => {
       lastRunAt: new Date().toISOString(),
       lastRunVersion: "2026.3.1",
     },
-    update: { channel: "stable" },
-    auth: apiKeyProvider.value === 'minimax' 
-      ? { profiles: { "minimax-cn:default": { provider: "minimax-cn", mode: "api_key" } } }
-      : apiKeyProvider.value === 'aliyun'
-      ? { profiles: { "bailian:default": { provider: "bailian", mode: "api_key" } } }
-      : { profiles: { "iflow:default": { provider: "iflow", mode: "api_key" } } },
     models: {
       mode: "merge",
-      providers: apiKeyProvider.value === 'minimax' 
-        ? {
-            minimax: {
-              baseUrl: "https://api.minimax.io/anthropic",
-              apiKey: apiKey.value,
-              api: "anthropic-messages",
-              models: [{ id: "MiniMax-M2.5", name: "MiniMax-M2.5", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 }]
-            }
-          }
-        : apiKeyProvider.value === 'aliyun'
-        ? {
-            bailian: {
-              baseUrl: "https://coding.dashscope.aliyuncs.com/v1",
-              apiKey: apiKey.value,
-              api: "openai-completions",
-              models: [{ id: "qwen3-max-2026-01-23", name: "qwen3-max-thinking", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 }]
-            }
-          }
-        : {
-            iflow: {
-              baseUrl: "https://apis.iflow.cn/v1",
-              apiKey: apiKey.value,
-              api: "openai",
-              models: getIflowModels()
-            }
-          }
+      providers: providerConfig
     },
     agents: { 
       defaults: { 
-        model: apiKeyProvider.value === 'minimax' 
-          ? { primary: "minimax/MiniMax-M2.5" } 
-          : apiKeyProvider.value === 'aliyun'
-          ? { primary: "qwen3-max" }
-          : { primary: "iflow/TBStars2-200B-A13B" }
+        model: { primary: primaryModel },
+        models: modelConfigs
       } 
     },
+    messages: { ackReactionScope: "group-mentions" },
+    session: { dmScope: "per-channel-peer" },
     commands: { native: "auto", nativeSkills: "auto", restart: true, ownerDisplay: "raw" },
     hooks: { internal: { enabled: true, entries: { "boot-md": { enabled: true }, "bootstrap-extra-files": { enabled: true }, "command-logger": { enabled: true }, "session-memory": { enabled: true } } } },
     channels: Object.fromEntries(channelManager.value.getEnabledChannels().filter(c => c.id !== 'web').map(c => [c.id, { enabled: true, ...c.config }])),
-    gateway: { port: 18789, mode: "local", bind: "loopback", auth: { mode: "token", token: "CHANGE_THIS_TOKEN" }, tailscale: { mode: "off", resetOnExit: false }, http: { endpoints: { chatCompletions: { enabled: true } } } },
+    gateway: { port: 18789, mode: "local", bind: "loopback", auth: { mode: "token", token: "CHANGE_THIS_TOKEN" }, tailscale: { mode: "off", resetOnExit: false } },
     skills: { install: { nodeManager: "npm" } },
     plugins: { entries: { telegram: { enabled: true } } }
   }
@@ -326,9 +340,23 @@ EOF`
   
   let installCommand: string
   if (alreadyInstalled.value) {
+    const skillsInstall = scenario?.skills 
+      ? scenario.skills.map((skill: string) => `npx clawhub@latest install ${skill}`).join('\n')
+      : 'echo "No skills to install"'
+    
     installCommand = `mkdir -p ~/.openclaw && cat > ~/.openclaw/openclaw.json << 'EOF'
 ${configJson}
-EOF`
+EOF
+
+echo ""
+echo "====== Install Skills ======"
+${skillsInstall}
+
+echo ""
+echo "====== Restart Gateway ======"
+openclaw gateway --port 18789 > ~/.openclaw/gateway.log 2>&1 &
+echo "OpenClaw gateway restarted"
+echo "Server running at: http://127.0.0.1:18789"`
   } else {
     installCommand = `curl -fsSL https://opendown.ai/cinstall.sh | bash -s && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak && cat > ~/.openclaw/openclaw.json << 'EOF'
 ${configJson}
