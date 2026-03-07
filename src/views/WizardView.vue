@@ -471,9 +471,9 @@ onMounted(() => {
       </div>
 
       <div class="wizard-actions">
-        <a href="https://discord.gg/gjGb5WEz" target="_blank" class="action-btn">
-          <MessageCircle class="icon" />
-          {{ language === 'zh' ? 'Discord支持' : 'Discord Support' }}
+        <a href="https://xhslink.com/o/9xDi3Ca4uSD" target="_blank" class="action-btn">
+          <img src="https://picasso-static.xiaohongshu.com/fe-platform/f43dc4a8baf03678996c62d8db6ebc01a82256ff.png" alt="Xiaohongshu" class="icon xhs-icon" />
+          {{ language === 'zh' ? '小红书' : 'Xiaohongshu' }}
         </a>
         <button @click="showHelp = !showHelp" class="action-btn">
           <HelpCircle class="icon" />
@@ -791,6 +791,12 @@ onMounted(() => {
 .action-btn .icon {
   width: 16px;
   height: 16px;
+}
+
+.action-btn .xhs-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 .faq-section {
