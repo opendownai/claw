@@ -88,6 +88,7 @@ const isWindows = ref(typeof navigator !== 'undefined' && navigator.platform.toL
 const alreadyInstalled = ref(false)
 const commandCopied = ref(false)
 const commandExpanded = ref(false)
+const channelsExpanded = ref(false)
 
 const step2TerminalText = computed(() => {
   return isWindows.value ? t.step2TerminalWindows : t.step2Terminal
@@ -516,13 +517,30 @@ onMounted(() => {
         
         <div class="channels-list">
           <ChannelCard
-            v-for="option in channelOptions"
-            :key="option.id"
-            :channel="channelManager.getChannel(option.id) || { id: option.id, name: option.name, nameEn: option.nameEn, icon: option.icon, enabled: option.id === 'web', config: {} }"
-            :channel-option="option"
+            :key="'web'"
+            :channel="channelManager.getChannel('web') || { id: 'web', name: 'Web界面', nameEn: 'Web Interface', icon: 'globe', enabled: true, config: {} }"
+            :channel-option="channelOptions.find(c => c.id === 'web')!"
             @toggle="handleChannelToggle"
             @update:config="handleChannelConfigChange"
           />
+          
+          <div class="more-channels">
+            <button @click="channelsExpanded = !channelsExpanded" class="more-channels-btn">
+              <ChevronDown class="expand-icon" :class="{ expanded: channelsExpanded }" />
+              <span>{{ language === 'zh' ? '更多渠道' : 'More Channels' }} ({{ channelOptions.length - 1 }})</span>
+            </button>
+            
+            <div v-show="channelsExpanded" class="more-channels-list">
+              <ChannelCard
+                v-for="option in channelOptions.filter(c => c.id !== 'web')"
+                :key="option.id"
+                :channel="channelManager.getChannel(option.id) || { id: option.id, name: option.name, nameEn: option.nameEn, icon: option.icon, enabled: false, config: {} }"
+                :channel-option="option"
+                @toggle="handleChannelToggle"
+                @update:config="handleChannelConfigChange"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -912,6 +930,47 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.more-channels {
+  margin-top: 4px;
+}
+
+.more-channels-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.more-channels-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.more-channels-btn .expand-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.more-channels-btn .expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.more-channels-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .api-providers {
