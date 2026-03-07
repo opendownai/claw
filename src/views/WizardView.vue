@@ -361,7 +361,7 @@ EOF`
     const configWrite = isWindows
       ? `mkdir %USERPROFILE%\\.openclaw 2>nul${eol}if exist %USERPROFILE%\\.openclaw\\openclaw.json copy %USERPROFILE%\\.openclaw\\openclaw.json %USERPROFILE%\\.openclaw\\openclaw.json.bak${eol}echo ${configJson.replace(/"/g, '""').replace(/\n/g, eol)} > %USERPROFILE%\\.openclaw\\openclaw.json`
       : `mkdir -p ~/.openclaw && if [ -f ~/.openclaw/openclaw.json ]; then cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak; fi && cat > ~/.openclaw/openclaw.json << 'EOF'${eol}${configJson}${eol}EOF`
-    return `echo.${eol}echo "====== Write Config ======"${eol}echo.${eol}${configWrite}\n`
+    return `echo ""${eol}echo "====== Write Config ======"${eol}echo ""${eol}${configWrite}\n`
   }
   
   const getSkillsModule = () => {
@@ -370,7 +370,7 @@ EOF`
     const skillsCommands = scenario.skills.map((skill: string) => 
       isWindows ? `npx clawhub@latest install ${skill}` : `npx clawhub@latest install ${skill}`
     ).join(eol)
-    return `echo.${eol}echo "====== Install Skills ======"${eol}echo.${eol}${skillsCommands}\n`
+    return `echo ""${eol}echo "====== Install Skills ======"${eol}echo ""${eol}${skillsCommands}\n`
   }
   
   const getRestartModule = () => {
@@ -378,13 +378,13 @@ EOF`
     const restartCmd = isWindows
       ? 'start /b openclaw gateway --port 18789 > %USERPROFILE%\\.openclaw\\gateway.log 2>&1'
       : 'openclaw gateway --port 18789 > ~/.openclaw/gateway.log 2>&1 &'
-    return `echo.${eol}echo "====== Restart Service ======"${eol}echo.${eol}${restartCmd}\n`
+    return `echo ""${eol}echo "====== Restart Service ======"${eol}echo ""${eol}${restartCmd}\n`
   }
   
   const getBrowserModule = () => {
     const eol = isWindows ? '\r\n' : '\n'
     const browserCmd = isWindows ? 'start http://127.0.0.1:18789' : 'open http://127.0.0.1:18789'
-    return `echo.${eol}echo "====== Open Browser ======"${eol}echo.${eol}${browserCmd}\n`
+    return `echo ""${eol}echo "====== Open Browser ======"${eol}echo ""${eol}${browserCmd}\n`
   }
   
   // Combine modules based on installation type
