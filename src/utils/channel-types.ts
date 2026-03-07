@@ -19,6 +19,7 @@ export interface ChannelOption {
   configFields: ConfigField[]
   color: string
   helpUrl?: string
+  logo?: string
 }
 
 export interface ConfigField {
@@ -41,7 +42,8 @@ export const channelOptions: ChannelOption[] = [
     descriptionEn: 'Interact through OpenClaw Web UI',
     icon: 'globe',
     color: '#6366f1',
-    configFields: []
+    configFields: [],
+    logo: 'https://cdn.opendown.ai/opendown-ai-2.png'
   },
   {
     id: 'feishu',
@@ -89,7 +91,8 @@ export const channelOptions: ChannelOption[] = [
         placeholderEn: 'Event subscription encryption key (optional)'
       }
     ],
-    helpUrl: 'https://www.feishu.cn/content/article/7602519239445974205'
+    helpUrl: 'https://www.feishu.cn/content/article/7602519239445974205',
+    logo: 'https://cdn.opendown.ai/logos/feishu.png'
   },
   {
     id: 'dingtalk',
@@ -128,7 +131,8 @@ export const channelOptions: ChannelOption[] = [
         placeholderEn: 'https://your-mcp-server.com (optional, for deep integration)'
       }
     ],
-    helpUrl: 'https://open.dingtalk.com/document/dingstart/build-dingtalk-ai-employees'
+    helpUrl: 'https://open.dingtalk.com/document/dingstart/build-dingtalk-ai-employees',
+    logo: 'https://cdn.opendown.ai/logos/dingtalk.png'
   },
   {
     id: 'telegram',
@@ -157,7 +161,8 @@ export const channelOptions: ChannelOption[] = [
         placeholder: '-1001234567890',
         placeholderEn: '-1001234567890'
       }
-    ]
+    ],
+    logo: 'https://cdn.opendown.ai/logos/telegram.png'
   },
   {
     id: 'iflow',
@@ -177,7 +182,8 @@ export const channelOptions: ChannelOption[] = [
         placeholder: 'https://iflow.cn/webhook/xxx',
         placeholderEn: 'https://iflow.cn/webhook/xxx'
       }
-    ]
+    ],
+    logo: 'https://cdn.opendown.ai/logos/iflow.png'
   },
   {
     id: 'whatsapp',
@@ -215,7 +221,8 @@ export const channelOptions: ChannelOption[] = [
         placeholder: 'Your webhook verification token (optional)',
         placeholderEn: 'Your webhook verification token (optional)'
       }
-    ]
+    ],
+    logo: 'https://cdn.opendown.ai/logos/whatsapp.png'
   },
   {
     id: 'discord',
@@ -244,7 +251,8 @@ export const channelOptions: ChannelOption[] = [
         placeholder: 'Your Discord Application ID',
         placeholderEn: 'Your Discord Application ID'
       }
-    ]
+    ],
+    logo: 'https://cdn.opendown.ai/logos/discord.png'
   },
   {
     id: 'slack',
@@ -273,7 +281,8 @@ export const channelOptions: ChannelOption[] = [
         placeholder: 'xapp-Your-App-Token (for socket mode)',
         placeholderEn: 'xapp-Your-App-Token (for socket mode)'
       }
-    ]
+    ],
+    logo: 'https://cdn.opendown.ai/logos/slack.png'
   }
 ]
 

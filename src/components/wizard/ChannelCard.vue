@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { ChannelConfig, ChannelOption } from '@/utils/channel-types'
 import { getChannelOptionName, getChannelOptionDescription, getChannelConfigFieldLabel, getChannelConfigFieldPlaceholder } from '@/utils/channel-types'
 import { useI18nStore } from '@/stores/i18n'
-import { Globe, MessageCircle, Send, Zap } from 'lucide-vue-next'
+import { Globe, MessageCircle, Send, Zap, Phone, MessageSquare, Hash } from 'lucide-vue-next'
 
 const props = defineProps<{
   channel: ChannelConfig
@@ -22,10 +22,15 @@ const iconComponent = computed(() => {
     globe: Globe,
     'message-circle': MessageCircle,
     send: Send,
-    zap: Zap
+    zap: Zap,
+    phone: Phone,
+    'message-square': MessageSquare,
+    hash: Hash
   }
   return icons[props.channelOption.icon] || Globe
 })
+
+const hasLogo = computed(() => !!props.channelOption.logo)
 
 function handleToggle(e: Event) {
   const target = e.target as HTMLInputElement
@@ -43,7 +48,8 @@ function handleConfigChange(field: string, e: Event) {
     <div class="channel-header">
       <div class="channel-info">
         <div class="channel-icon" :style="{ backgroundColor: channelOption.color }">
-          <component :is="iconComponent" class="icon" />
+          <img v-if="hasLogo" :src="channelOption.logo" class="channel-logo" :alt="getChannelOptionName(channelOption, language)" />
+          <component v-else :is="iconComponent" class="icon" />
         </div>
         <div class="channel-text">
           <h3 class="channel-name">{{ getChannelOptionName(channelOption, language) }}</h3>
@@ -124,6 +130,13 @@ function handleConfigChange(field: string, e: Event) {
   align-items: center;
   justify-content: center;
   color: white;
+  overflow: hidden;
+}
+
+.channel-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .icon {
