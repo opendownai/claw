@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure PATH includes standard directories for compatibility
+export PATH="/usr/local/bin:/opt/homebrew/bin:/bin:/usr/bin:$PATH"
+
 # We don't need return codes for "$(command)", only stdout is needed.
 # Allow `[[ -n "$(command)" ]]`, `func "$(command)"`, pipes, etc.
 # shellcheck disable=SC2312

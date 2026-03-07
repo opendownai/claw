@@ -1217,6 +1217,9 @@ install_homebrew() {
             export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
             export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
             
+            # Ensure PATH includes standard directories for compatibility
+            export PATH="/usr/local/bin:/opt/homebrew/bin:/bin:/usr/bin:$PATH"
+            
             run_quiet_step "Installing Homebrew" run_remote_bash "https://opendown.ai/homebrew-install.sh"
 
             # Add Homebrew to PATH for this session
