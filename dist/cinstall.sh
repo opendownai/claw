@@ -1326,16 +1326,26 @@ check_node() {
 # Install Node.js
 install_node() {
     if [[ "$OS" == "macos" ]]; then
-        ui_info "Installing Node.js via Homebrew"
-        # Set Homebrew mirror environment variables
-        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
-        run_quiet_step "Installing node@22" brew install node@22
-        brew link node@22 --overwrite --force 2>/dev/null || true
-        if ! ensure_macos_node22_active; then
-            exit 1
+        ui_info "Installing Node.js (trying NodeSource mirror first)"
+        
+        # Try installing via NodeSource script first (faster in China)
+        if install_node_from_nodesource; then
+            ui_success "Node.js installed via NodeSource"
+            print_active_node_paths || true
+        else
+            ui_info "NodeSource install failed, falling back to Homebrew"
+            # Set Homebrew mirror environment variables
+            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
+            # Also configure npm registry for any npm operations during installation
+            npm config set registry "${NPM_REGISTRY}" 2>/dev/null || true
+            run_quiet_step "Installing node@22" brew install node@22
+            brew link node@22 --overwrite --force 2>/dev/null || true
+            if ! ensure_macos_node22_active; then
+                exit 1
+            fi
+            ui_success "Node.js installed via Homebrew"
+            print_active_node_paths || true
         fi
-        ui_success "Node.js installed"
-        print_active_node_paths || true
     elif [[ "$OS" == "linux" ]]; then
         ui_info "Installing Node.js via NodeSource (China mirror)"
         require_sudo
@@ -1392,6 +1402,46 @@ install_node() {
 
     # Detect NVM and warn if the active Node is still from NVM with old version
     detect_nvm_and_warn
+}
+
+# Install Node.js from NodeSource (macOS alternative to Homebrew)
+install_node_from_nodesource() {
+    if command -v node &> /dev/null; then
+        local current_version
+        current_version="$(node -v 2>/dev/null || true)"
+        local major="${current_version#v}"
+        major="${major%%.*}"
+        
+        if [[ -n "$major" && "$major" -ge 22 ]]; then
+            ui_info "Node.js ${current_version} already installed and meets requirement (>=22)"
+            return 0
+        fi
+    fi
+
+    # Determine package manager
+    if command -v brew &> /dev/null; then
+        # Use NodeSource setup script with mirror
+        local tmp
+        tmp="$(mktempfile)"
+        download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
+        
+        # Execute the setup script
+        if bash "$tmp"; then
+            # Verify installation
+            if command -v node &> /dev/null; then
+                local version
+                version="$(node -v 2>/dev/null || true)"
+                local major="${version#v}"
+                major="${major%%.*}"
+                
+                if [[ -n "$major" && "$major" -ge 22 ]]; then
+                    return 0
+                fi
+            fi
+        fi
+    fi
+    
+    return 1
 }
 
 # Detect NVM and warn user if they need to switch Node version
