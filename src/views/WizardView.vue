@@ -243,7 +243,7 @@ const installScript = computed(() => {
   ]
 
   const minimaxModels = [
-    { id: "MiniMax-M2.5", name: "MiniMax-M2.5", api: "anthropic-messages", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
+    { id: "MiniMax-M2.5", name: "MiniMax-M2.5", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 1000000, maxTokens: 65536 },
   ]
 
   let providerConfig: any
