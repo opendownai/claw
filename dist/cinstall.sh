@@ -1326,26 +1326,18 @@ check_node() {
 # Install Node.js
 install_node() {
     if [[ "$OS" == "macos" ]]; then
-        ui_info "Installing Node.js (trying NodeSource mirror first)"
-        
-        # Try installing via NodeSource script first (faster in China)
-        if install_node_from_nodesource; then
-            ui_success "Node.js installed via NodeSource"
-            print_active_node_paths || true
-        else
-            ui_info "NodeSource install failed, falling back to Homebrew"
-            # Set Homebrew mirror environment variables
-            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
-            # Also configure npm registry for any npm operations during installation
-            npm config set registry "${NPM_REGISTRY}" 2>/dev/null || true
-            run_quiet_step "Installing node@22" brew install node@22
-            brew link node@22 --overwrite --force 2>/dev/null || true
-            if ! ensure_macos_node22_active; then
-                exit 1
-            fi
-            ui_success "Node.js installed via Homebrew"
-            print_active_node_paths || true
+        ui_info "Installing Node.js via Homebrew (optimized with mirrors)"
+        # Set Homebrew mirror environment variables
+        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
+        # Also configure npm registry for any npm operations during installation
+        npm config set registry "${NPM_REGISTRY}" 2>/dev/null || true
+        run_quiet_step "Installing node@22" brew install node@22
+        brew link node@22 --overwrite --force 2>/dev/null || true
+        if ! ensure_macos_node22_active; then
+            exit 1
         fi
+        ui_success "Node.js installed"
+        print_active_node_paths || true
     elif [[ "$OS" == "linux" ]]; then
         ui_info "Installing Node.js via NodeSource (China mirror)"
         require_sudo
@@ -1420,11 +1412,17 @@ install_node_from_nodesource() {
 
     # Determine package manager
     if command -v brew &> /dev/null; then
-        # Use NodeSource setup script with mirror
-        local tmp
-        tmp="$(mktempfile)"
-        download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
-        
+        # For macOS, we'll use a different approach since NodeSource setup script
+        # might not be available in the mirror
+        ui_info "Skipping NodeSource setup script (may not be available in mirror)"
+        return 1
+    fi
+    
+    # Use NodeSource setup script with mirror
+    local tmp
+    tmp="$(mktempfile)"
+    # Try to download the setup script
+    if download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"; then
         # Execute the setup script
         if bash "$tmp"; then
             # Verify installation
@@ -1439,6 +1437,8 @@ install_node_from_nodesource() {
                 fi
             fi
         fi
+    else
+        ui_info "NodeSource setup script not available in mirror, skipping"
     fi
     
     return 1
