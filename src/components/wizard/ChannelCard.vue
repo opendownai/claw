@@ -156,6 +156,7 @@ function handleConfigChange(field: string, e: Event) {
 .channel-logo-svg :deep(svg) {
   width: 100%;
   height: 100%;
+  fill: white;
 }
 
 .icon {
