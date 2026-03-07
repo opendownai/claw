@@ -10,6 +10,7 @@ import {
   TrendingUp, Plane, Store, Factory, Home, Users, FactoryIcon, ChevronDown
 } from 'lucide-vue-next'
 import ChannelCard from '@/components/wizard/ChannelCard.vue'
+import KeySequence from '@/components/wizard/KeySequence.vue'
 
 const { t } = useI18nStore()
 const { language } = storeToRefs(useI18nStore())
@@ -634,7 +635,10 @@ onMounted(() => {
           </div>
           <div class="install-step">
             <span class="step-num">2</span>
-            <span>{{ step2TerminalText }}</span>
+            <div class="step-2-content">
+              <KeySequence />
+              <span class="step-2-text">{{ step2TerminalText }}</span>
+            </div>
           </div>
           <div class="install-step">
             <span class="step-num">3</span>
@@ -1187,11 +1191,21 @@ onMounted(() => {
 
 .install-step {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 8px 0;
   font-size: 14px;
   color: var(--text-secondary);
+}
+
+.step-2-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.step-2-text {
+  color: var(--text-tertiary);
 }
 
 .step-num {
