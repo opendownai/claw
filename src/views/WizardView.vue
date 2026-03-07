@@ -68,6 +68,11 @@ const selectedProvider = computed(() => {
   return providers.find(p => p.id === apiKeyProvider.value)
 })
 
+function isInlineSvg(logo?: string): boolean {
+  if (!logo) return false
+  return logo.trim().startsWith('<svg')
+}
+
 function selectProvider(id: Provider['id']) {
   apiKeyProvider.value = id
   apiKey.value = ''
@@ -503,7 +508,8 @@ onMounted(() => {
             class="provider-tab"
             :class="{ active: apiKeyProvider === provider.id }"
           >
-            <span v-if="provider.logo" class="provider-logo" v-html="provider.logo"></span>
+            <img v-if="provider.logo && !isInlineSvg(provider.logo)" :src="provider.logo" class="provider-logo-img" />
+            <span v-else-if="provider.logo && isInlineSvg(provider.logo)" class="provider-logo-svg" v-html="provider.logo"></span>
             <span class="provider-tab-name">{{ language === 'zh' ? provider.name : provider.nameEn }}</span>
             <span v-if="provider.recommended" class="provider-tab-badge">Recommended</span>
           </button>
@@ -927,21 +933,27 @@ onMounted(() => {
   vertical-align: middle;
 }
 
-.provider-logo {
+.provider-logo-img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 20px;
   height: 20px;
   margin-right: 6px;
+  vertical-align: middle;
 }
 
-.provider-logo :deep(svg) {
-  width: 100%;
-  height: 100%;
+.provider-logo-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
-.provider-logo :deep(img) {
+.provider-logo-svg :deep(svg) {
   width: 100%;
   height: 100%;
 }

@@ -32,6 +32,11 @@ const iconComponent = computed(() => {
 
 const hasLogo = computed(() => !!props.channelOption.logo)
 
+const isInlineSvg = computed(() => {
+  if (!props.channelOption.logo) return false
+  return props.channelOption.logo.trim().startsWith('<svg')
+})
+
 function handleToggle(e: Event) {
   const target = e.target as HTMLInputElement
   emit('toggle', props.channel.id, target.checked)
@@ -48,7 +53,8 @@ function handleConfigChange(field: string, e: Event) {
     <div class="channel-header">
       <div class="channel-info">
         <div class="channel-icon" :style="{ backgroundColor: channelOption.color }">
-          <img v-if="hasLogo" :src="channelOption.logo" class="channel-logo" :alt="getChannelOptionName(channelOption, language)" />
+          <img v-if="hasLogo && !isInlineSvg" :src="channelOption.logo" class="channel-logo" :alt="getChannelOptionName(channelOption, language)" />
+          <span v-else-if="hasLogo && isInlineSvg" class="channel-logo-svg" v-html="channelOption.logo"></span>
           <component v-else :is="iconComponent" class="icon" />
         </div>
         <div class="channel-text">
@@ -137,6 +143,19 @@ function handleConfigChange(field: string, e: Event) {
   width: 28px;
   height: 28px;
   object-fit: contain;
+}
+
+.channel-logo-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.channel-logo-svg :deep(svg) {
+  width: 100%;
+  height: 100%;
 }
 
 .icon {
