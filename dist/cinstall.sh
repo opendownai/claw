@@ -1212,7 +1212,7 @@ install_homebrew() {
                 print_homebrew_admin_fix
                 exit 1
             fi
-            ui_info "Installing Homebrew (China mirror)"
+            ui_info "Installing Homebrew (Alibaba Cloud mirror)"
             # Use Alibaba Cloud mirror which is verified to exist
             export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"
             export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"
