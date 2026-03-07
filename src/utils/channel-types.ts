@@ -44,6 +44,54 @@ export const channelOptions: ChannelOption[] = [
     configFields: []
   },
   {
+    id: 'feishu',
+    name: '飞书',
+    nameEn: 'Feishu',
+    description: '通过飞书AI员工接收和发送消息，支持WebSocket长连接和事件订阅',
+    descriptionEn: 'Receive and send messages via Feishu AI employee with WebSocket connection and event subscription',
+    icon: 'zap',
+    color: '#4285f4',
+    configFields: [
+      {
+        name: 'appId',
+        label: 'App ID',
+        labelEn: 'App ID',
+        type: 'text',
+        required: true,
+        placeholder: 'cli_xxx (企业自建应用ID)',
+        placeholderEn: 'cli_xxx (Enterprise self-built app ID)'
+      },
+      {
+        name: 'appSecret',
+        label: 'App Secret',
+        labelEn: 'App Secret',
+        type: 'password',
+        required: true,
+        placeholder: '应用凭证中的App Secret',
+        placeholderEn: 'App Secret from application credentials'
+      },
+      {
+        name: 'verificationToken',
+        label: '验证令牌',
+        labelEn: 'Verification Token',
+        type: 'text',
+        required: false,
+        placeholder: '事件订阅的验证令牌 (可选)',
+        placeholderEn: 'Event subscription verification token (optional)'
+      },
+      {
+        name: 'encryptKey',
+        label: '加密密钥',
+        labelEn: 'Encryption Key',
+        type: 'password',
+        required: false,
+        placeholder: '事件订阅的加密密钥 (可选)',
+        placeholderEn: 'Event subscription encryption key (optional)'
+      }
+    ],
+    helpUrl: 'https://www.feishu.cn/content/article/7602519239445974205'
+  },
+  {
     id: 'dingtalk',
     name: '钉钉',
     nameEn: 'DingTalk',
@@ -112,54 +160,6 @@ export const channelOptions: ChannelOption[] = [
     ]
   },
   {
-    id: 'feishu',
-    name: '飞书',
-    nameEn: 'Feishu',
-    description: '通过飞书AI员工接收和发送消息，支持WebSocket长连接和事件订阅',
-    descriptionEn: 'Receive and send messages via Feishu AI employee with WebSocket connection and event subscription',
-    icon: 'zap',
-    color: '#4285f4',
-    configFields: [
-      {
-        name: 'appId',
-        label: 'App ID',
-        labelEn: 'App ID',
-        type: 'text',
-        required: true,
-        placeholder: 'cli_xxx (企业自建应用ID)',
-        placeholderEn: 'cli_xxx (Enterprise self-built app ID)'
-      },
-      {
-        name: 'appSecret',
-        label: 'App Secret',
-        labelEn: 'App Secret',
-        type: 'password',
-        required: true,
-        placeholder: '应用凭证中的App Secret',
-        placeholderEn: 'App Secret from application credentials'
-      },
-      {
-        name: 'verificationToken',
-        label: '验证令牌',
-        labelEn: 'Verification Token',
-        type: 'text',
-        required: false,
-        placeholder: '事件订阅的验证令牌 (可选)',
-        placeholderEn: 'Event subscription verification token (optional)'
-      },
-      {
-        name: 'encryptKey',
-        label: '加密密钥',
-        labelEn: 'Encryption Key',
-        type: 'password',
-        required: false,
-        placeholder: '事件订阅的加密密钥 (可选)',
-        placeholderEn: 'Event subscription encryption key (optional)'
-      }
-    ],
-    helpUrl: 'https://www.feishu.cn/content/article/7602519239445974205'
-  },
-  {
     id: 'iflow',
     name: '心流',
     nameEn: 'iFlow',
@@ -176,6 +176,102 @@ export const channelOptions: ChannelOption[] = [
         required: true,
         placeholder: 'https://iflow.cn/webhook/xxx',
         placeholderEn: 'https://iflow.cn/webhook/xxx'
+      }
+    ]
+  },
+  {
+    id: 'whatsapp',
+    name: 'WhatsApp',
+    nameEn: 'WhatsApp',
+    description: '通过 WhatsApp Business API 接收和发送消息',
+    descriptionEn: 'Receive and send messages via WhatsApp Business API',
+    icon: 'phone',
+    color: '#25D366',
+    configFields: [
+      {
+        name: 'phoneNumberId',
+        label: 'Phone Number ID',
+        labelEn: 'Phone Number ID',
+        type: 'text',
+        required: true,
+        placeholder: 'Your WhatsApp Business Phone Number ID',
+        placeholderEn: 'Your WhatsApp Business Phone Number ID'
+      },
+      {
+        name: 'accessToken',
+        label: 'Access Token',
+        labelEn: 'Access Token',
+        type: 'password',
+        required: true,
+        placeholder: 'Your WhatsApp Business Access Token',
+        placeholderEn: 'Your WhatsApp Business Access Token'
+      },
+      {
+        name: 'webhookVerifyToken',
+        label: 'Webhook Verify Token',
+        labelEn: 'Webhook Verify Token',
+        type: 'text',
+        required: false,
+        placeholder: 'Your webhook verification token (optional)',
+        placeholderEn: 'Your webhook verification token (optional)'
+      }
+    ]
+  },
+  {
+    id: 'discord',
+    name: 'Discord',
+    nameEn: 'Discord',
+    description: '通过 Discord 机器人接收和发送消息',
+    descriptionEn: 'Receive and send messages via Discord bot',
+    icon: 'message-square',
+    color: '#5865F2',
+    configFields: [
+      {
+        name: 'botToken',
+        label: 'Bot Token',
+        labelEn: 'Bot Token',
+        type: 'password',
+        required: true,
+        placeholder: 'Your Discord Bot Token',
+        placeholderEn: 'Your Discord Bot Token'
+      },
+      {
+        name: 'applicationId',
+        label: 'Application ID',
+        labelEn: 'Application ID',
+        type: 'text',
+        required: true,
+        placeholder: 'Your Discord Application ID',
+        placeholderEn: 'Your Discord Application ID'
+      }
+    ]
+  },
+  {
+    id: 'slack',
+    name: 'Slack',
+    nameEn: 'Slack',
+    description: '通过 Slack App 接收和发送消息',
+    descriptionEn: 'Receive and send messages via Slack App',
+    icon: 'hash',
+    color: '#4A154B',
+    configFields: [
+      {
+        name: 'botToken',
+        label: 'Bot Token',
+        labelEn: 'Bot Token',
+        type: 'password',
+        required: true,
+        placeholder: 'xoxb-Your-Bot-Token',
+        placeholderEn: 'xoxb-Your-Bot-Token'
+      },
+      {
+        name: 'appToken',
+        label: 'App Token',
+        labelEn: 'App Token',
+        type: 'password',
+        required: false,
+        placeholder: 'xapp-Your-App-Token (for socket mode)',
+        placeholderEn: 'xapp-Your-App-Token (for socket mode)'
       }
     ]
   }
