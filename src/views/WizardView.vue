@@ -86,6 +86,7 @@ const copied = ref(false)
 const showHelp = ref(false)
 const isWindows = ref(typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('win'))
 const alreadyInstalled = ref(false)
+const commandCopied = ref(false)
 
 const step2TerminalText = computed(() => {
   return isWindows.value ? t.step2TerminalWindows : t.step2Terminal
@@ -125,7 +126,7 @@ const scenarios: Scenario[] = [
     description: '日程管理、邮件处理、文件整理',
     descriptionEn: 'Schedule management, email handling, file organization',
     icon: 'user',
-    skills: ['email', 'google-calendar', 'google-maps', 'file-system', 'notion'],
+    skills: ['email-daily-summary', 'calendar', 'gog-calendar', 'file-system', 'notion'],
   },
   {
     id: 'developer',
@@ -143,7 +144,7 @@ const scenarios: Scenario[] = [
     description: '库存监控、价格调整、订单处理',
     descriptionEn: 'Inventory monitoring, price adjustment, order processing',
     icon: 'shopping-bag',
-    skills: ['email', 'google-maps', 'google-search', 'browser', 'api-integration', 'screen-control'],
+    skills: ['email-daily-summary', 'gog-calendar', 'google-search', 'browser', 'api-integration', 'screen-control'],
   },
   {
     id: 'content-creator',
@@ -170,7 +171,7 @@ const scenarios: Scenario[] = [
     description: '订票改签、值机、客服处理',
     descriptionEn: 'Ticket booking, check-in, customer service',
     icon: 'plane',
-    skills: ['browser', 'intent-recognition', 'screen-control', 'email', 'google-calendar'],
+    skills: ['browser', 'intent-recognition', 'screen-control', 'email-daily-summary', 'calendar'],
   },
   {
     id: 'retail-customer-service',
@@ -197,7 +198,7 @@ const scenarios: Scenario[] = [
     description: '设备控制、环境调节、自动化场景',
     descriptionEn: 'Device control, environment adjustment, automation',
     icon: 'home',
-    skills: ['iot-api', 'screen-control', 'google-calendar', 'web-fetch'],
+    skills: ['iot-api', 'screen-control', 'calendar', 'web-fetch'],
   },
   {
     id: 'hr-admin',
@@ -206,7 +207,7 @@ const scenarios: Scenario[] = [
     description: '知识库管理、文档处理、流程自动化',
     descriptionEn: 'Knowledge base, document processing, workflow automation',
     icon: 'users',
-    skills: ['knowledge-base', 'notion', 'browser', 'ocr', 'email', 'google-calendar'],
+    skills: ['knowledge-base', 'notion', 'browser', 'ocr', 'email-daily-summary', 'calendar'],
   },
 ]
 
@@ -347,32 +348,56 @@ EOF`
   const channelsConfig = Object.fromEntries(channelManager.value.getEnabledChannels().filter(c => c.id !== 'web').map(c => [c.id, { enabled: true, ...c.config }]))
   const channelsJson = btoa(JSON.stringify(channelsConfig))
   
-  let installCommand: string
-  if (alreadyInstalled.value) {
-    const skillsInstall = scenario?.skills 
-      ? scenario.skills.map((skill: string) => `npx clawhub@latest install ${skill}`).join('\n')
-      : 'echo "No skills to install"'
-    
-    installCommand = `mkdir -p ~/.openclaw && cat > ~/.openclaw/openclaw.json << 'EOF'
-${configJson}
-EOF
-
-echo ""
-echo "====== Install Skills ======"
-${skillsInstall}
-
-echo ""
-echo "====== Restart Gateway ======"
-openclaw gateway --port 18789 > ~/.openclaw/gateway.log 2>&1 &
-echo "OpenClaw gateway restarted"
-echo "Server running at: http://127.0.0.1:18789"`
-  } else {
-    installCommand = `curl -fsSL https://opendown.ai/cinstall.sh | bash -s && cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak && cat > ~/.openclaw/openclaw.json << 'EOF'
-${configJson}
-EOF`
+  // Define install modules as separate functions
+  const getInstallModule = () => {
+    if (alreadyInstalled.value) return ''
+    return isWindows 
+      ? 'curl -fsSL https://opendown.ai/cinstall.sh -o install.bat && call install.bat && del install.bat\n'
+      : 'curl -fsSL https://opendown.ai/cinstall.sh | bash\n'
   }
   
-  return installCommand
+  const getConfigModule = () => {
+    const eol = isWindows ? '\r\n' : '\n'
+    const configWrite = isWindows
+      ? `mkdir %USERPROFILE%\\.openclaw 2>nul${eol}if exist %USERPROFILE%\\.openclaw\\openclaw.json copy %USERPROFILE%\\.openclaw\\openclaw.json %USERPROFILE%\\.openclaw\\openclaw.json.bak${eol}echo ${configJson.replace(/"/g, '""').replace(/\n/g, eol)} > %USERPROFILE%\\.openclaw\\openclaw.json`
+      : `mkdir -p ~/.openclaw && if [ -f ~/.openclaw/openclaw.json ]; then cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.bak; fi && cat > ~/.openclaw/openclaw.json << 'EOF'${eol}${configJson}${eol}EOF`
+    return `echo.${eol}echo "====== Write Config ======"${eol}echo.${eol}${configWrite}\n`
+  }
+  
+  const getSkillsModule = () => {
+    if (!scenario?.skills || scenario.skills.length === 0) return ''
+    const eol = isWindows ? '\r\n' : '\n'
+    const skillsCommands = scenario.skills.map((skill: string) => 
+      isWindows ? `npx clawhub@latest install ${skill}` : `npx clawhub@latest install ${skill}`
+    ).join(eol)
+    return `echo.${eol}echo "====== Install Skills ======"${eol}echo.${eol}${skillsCommands}\n`
+  }
+  
+  const getRestartModule = () => {
+    const eol = isWindows ? '\r\n' : '\n'
+    const restartCmd = isWindows
+      ? 'start /b openclaw gateway --port 18789 > %USERPROFILE%\\.openclaw\\gateway.log 2>&1'
+      : 'openclaw gateway --port 18789 > ~/.openclaw/gateway.log 2>&1 &'
+    return `echo.${eol}echo "====== Restart Service ======"${eol}echo.${eol}${restartCmd}\n`
+  }
+  
+  const getBrowserModule = () => {
+    const eol = isWindows ? '\r\n' : '\n'
+    const browserCmd = isWindows ? 'start http://127.0.0.1:18789' : 'open http://127.0.0.1:18789'
+    return `echo.${eol}echo "====== Open Browser ======"${eol}echo.${eol}${browserCmd}\n`
+  }
+  
+  // Combine modules based on installation type
+  let installCommand: string
+  if (alreadyInstalled.value) {
+    // For already installed: config, skills, restart, browser
+    installCommand = getConfigModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
+  } else {
+    // For new install: install, config, skills, restart, browser
+    installCommand = getInstallModule() + getConfigModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
+  }
+  
+  return installCommand.trim()
 })
 
 function selectScenario(scenario: Scenario) {
@@ -397,7 +422,11 @@ function handleChannelConfigChange(id: string, field: string, value: any) {
 function copyCommand() {
   navigator.clipboard.writeText(installScript.value).then(() => {
     copied.value = true
-    setTimeout(() => copied.value = false, 2000)
+    commandCopied.value = true
+    setTimeout(() => {
+      copied.value = false
+      commandCopied.value = false
+    }, 2000)
   })
 }
 
@@ -474,30 +503,36 @@ onMounted(() => {
 
       <!-- Step 2: Select Channels -->
       <div v-if="step === 2" class="step-content">
-        <button @click="step = 1" class="back-btn">{{ t.backToSelect }}</button>
+        <div class="step-header">
+          <button @click="step = 1" class="back-btn">{{ t.backToSelect }}</button>
+          <button @click="step = 3" class="next-btn">
+            {{ t.nextStep }} <ArrowRight class="btn-icon" />
+          </button>
+        </div>
         <h2 class="step-title">{{ t.step2Title }}</h2>
+        
+        <div class="step-tip">{{ language === 'zh' ? '推荐先体验 Web 界面，后续可随时添加其他渠道' : 'Recommended to try Web Interface first, other channels can be added later' }}</div>
         
         <div class="channels-list">
           <ChannelCard
             v-for="option in channelOptions"
             :key="option.id"
-            :channel="channelManager.getChannel(option.id) || { id: option.id, name: option.name, nameEn: option.nameEn, icon: option.icon, enabled: false, config: {} }"
+            :channel="channelManager.getChannel(option.id) || { id: option.id, name: option.name, nameEn: option.nameEn, icon: option.icon, enabled: option.id === 'web', config: {} }"
             :channel-option="option"
             @toggle="handleChannelToggle"
             @update:config="handleChannelConfigChange"
           />
         </div>
-        
-        <div class="step-actions">
-          <button @click="step = 3" class="btn btn-primary">
-            {{ t.nextStep }} <ArrowRight class="btn-icon" />
-          </button>
-        </div>
       </div>
 
       <!-- Step 3: API Key -->
       <div v-if="step === 3" class="step-content">
-        <button @click="step = 2" class="back-btn">{{ t.backToChannels }}</button>
+        <div class="step-header">
+          <button @click="step = 2" class="back-btn">{{ t.backToChannels }}</button>
+          <button @click="step = 4" :disabled="!apiKey" class="next-btn" :class="{ disabled: !apiKey }">
+            {{ t.nextStep }} <ArrowRight class="btn-icon" />
+          </button>
+        </div>
         <h2 class="step-title">{{ t.step3Title }}</h2>
         
         <div class="provider-tabs">
@@ -518,6 +553,19 @@ onMounted(() => {
         <div class="provider-config">
           <div class="provider-info">
             <p class="provider-desc">{{ language === 'zh' ? selectedProvider?.description : selectedProvider?.descriptionEn }}</p>
+            <div class="provider-tip">
+              <span class="tip-icon">💡</span>
+              <span v-if="language === 'zh'">
+                <span v-if="selectedProvider?.id === 'aliyun'">建议使用 Coding Plan 以获得最佳代码相关功能</span>
+                <span v-else-if="selectedProvider?.id === 'minimax'">建议使用支持 coding plan 的模型以获得最佳代码相关功能</span>
+                <span v-else>建议使用支持 coding plan 的模型以获得最佳代码相关功能</span>
+              </span>
+              <span v-else>
+                <span v-if="selectedProvider?.id === 'aliyun'">Recommended to use Coding Plan for best code-related features</span>
+                <span v-else-if="selectedProvider?.id === 'minimax'">Recommended to use coding plan models for best code-related features</span>
+                <span v-else>Recommended to use coding plan models for best code-related features</span>
+              </span>
+            </div>
             <a 
               :href="selectedProvider?.consoleUrl" 
               target="_blank" 
@@ -548,7 +596,9 @@ onMounted(() => {
 
       <!-- Step 4: Install -->
       <div v-if="step === 4" class="step-content">
-        <button @click="step = 3" class="back-btn">{{ t.backToChannels }}</button>
+        <div class="step-header">
+          <button @click="step = 3" class="back-btn">{{ t.backToChannels }}</button>
+        </div>
         <h2 class="step-title">{{ t.step4Title }}</h2>
         
         <div class="already-installed-check">
@@ -575,6 +625,17 @@ onMounted(() => {
             <span class="step-num success">✓</span>
             <span>{{ t.step4Wait }}</span>
           </div>
+        </div>
+
+        <div class="command-preview card-apple">
+          <div class="command-header">
+            <span class="command-title">{{ language === 'zh' ? '安装命令预览' : 'Install Command Preview' }}</span>
+            <button @click="copyCommand" class="copy-command-btn" :title="language === 'zh' ? '复制命令' : 'Copy command'">
+              <Copy v-if="!commandCopied" class="copy-icon" />
+              <Check v-else class="copy-icon" />
+            </button>
+          </div>
+          <pre class="command-content">{{ installScript }}</pre>
         </div>
 
         <button @click="copyCommand" class="btn btn-primary copy-btn">
@@ -989,9 +1050,34 @@ onMounted(() => {
 }
 
 .provider-console-link {
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--accent-blue);
-  font-weight: 500;
+  text-decoration: none;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.provider-console-link:hover {
+  text-decoration: underline;
+}
+
+.provider-tip {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tip-icon {
+  font-size: 14px;
+  line-height: 1;
 }
 
 .provider-console-link:hover {
@@ -1103,6 +1189,94 @@ onMounted(() => {
   font-size: 13px;
   color: var(--text-tertiary);
   margin-top: 16px;
+}
+
+.step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.step-header .back-btn {
+  margin: 0;
+}
+
+.next-btn {
+  padding: 8px 16px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.next-btn:hover:not(:disabled) {
+  background: var(--accent-blue-hover);
+}
+
+.next-btn:disabled {
+  background: var(--bg-disabled);
+  cursor: not-allowed;
+  color: var(--text-tertiary);
+}
+
+.command-preview {
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.command-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.command-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.copy-command-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-command-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.copy-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+}
+
+.command-content {
+  padding: 16px;
+  margin: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.5;
 }
 
 @media (max-width: 640px) {

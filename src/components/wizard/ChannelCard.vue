@@ -58,7 +58,10 @@ function handleConfigChange(field: string, e: Event) {
           <component v-else :is="iconComponent" class="icon" />
         </div>
         <div class="channel-text">
-          <h3 class="channel-name">{{ getChannelOptionName(channelOption, language) }}</h3>
+          <div class="channel-header">
+            <h3 class="channel-name">{{ getChannelOptionName(channelOption, language) }}</h3>
+            <span v-if="channelOption.recommended" class="channel-recommended">{{ language === 'zh' ? '推荐' : 'Recommended' }}</span>
+          </div>
           <p class="channel-desc">{{ getChannelOptionDescription(channelOption, language) }}</p>
           <a 
             v-if="channelOption.helpUrl" 
@@ -246,6 +249,24 @@ function handleConfigChange(field: string, e: Event) {
   font-weight: 500;
   color: var(--text-secondary);
   margin-bottom: 6px;
+}
+
+.channel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.channel-recommended {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 
 .field-input {
