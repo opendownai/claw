@@ -161,10 +161,12 @@ function handleConfigChange(field: string, e: Event) {
 
 .channel-logo-svg :deep(svg[fill="none"]) {
   fill: none;
+  stroke: white;
 }
 
 .channel-logo-svg :deep(svg[stroke]) {
   fill: none;
+  stroke: white;
 }
 
 .icon {
