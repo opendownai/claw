@@ -126,7 +126,7 @@ const scenarios: Scenario[] = [
     description: '日程管理、邮件处理、文件整理',
     descriptionEn: 'Schedule management, email handling, file organization',
     icon: 'user',
-    skills: ['email-daily-summary', 'calendar', 'gog-calendar', 'file-system', 'notion'],
+    skills: ['email-daily-summary', 'calendar', 'gog-calendar', 'notion'],
   },
   {
     id: 'developer',
@@ -135,7 +135,7 @@ const scenarios: Scenario[] = [
     description: '代码编写、测试、多Agent协作',
     descriptionEn: 'Code writing, testing, multi-agent collaboration',
     icon: 'code',
-    skills: ['github', 'npm', 'docker', 'terminal', 'git', 'code-execution', 'agent-browser'],
+    skills: ['github', 'git', 'docker', 'terminal', 'agent-browser'],
   },
   {
     id: 'ecommerce',
@@ -144,7 +144,7 @@ const scenarios: Scenario[] = [
     description: '库存监控、价格调整、订单处理',
     descriptionEn: 'Inventory monitoring, price adjustment, order processing',
     icon: 'shopping-bag',
-    skills: ['email-daily-summary', 'gog-calendar', 'google-search', 'browser', 'api-integration', 'screen-control'],
+    skills: ['email-daily-summary', 'gog-calendar', 'google-search', 'browser', 'slack', 'discord'],
   },
   {
     id: 'content-creator',
@@ -153,7 +153,7 @@ const scenarios: Scenario[] = [
     description: '资讯收集、内容生成、账号管理',
     descriptionEn: 'Information gathering, content generation, account management',
     icon: 'megaphone',
-    skills: ['rss-browser', 'social-api', 'content-generation', 'web-fetch', 'google-search'],
+    skills: ['x-twitter', 'slack', 'content-generation', 'web-fetch', 'google-search'],
   },
   {
     id: 'trading-assistant',
@@ -171,7 +171,7 @@ const scenarios: Scenario[] = [
     description: '订票改签、值机、客服处理',
     descriptionEn: 'Ticket booking, check-in, customer service',
     icon: 'plane',
-    skills: ['browser', 'intent-recognition', 'screen-control', 'email-daily-summary', 'calendar'],
+    skills: ['browser', 'screen-control', 'email-daily-summary', 'calendar'],
   },
   {
     id: 'retail-customer-service',
@@ -180,7 +180,7 @@ const scenarios: Scenario[] = [
     description: '订单处理、问题解决、客户服务',
     descriptionEn: 'Order processing, problem solving, customer service',
     icon: 'store',
-    skills: ['api-integration', 'chatbot-flow', 'screen-control', 'browser', 'google-search'],
+    skills: ['browser', 'google-search', 'slack', 'discord'],
   },
   {
     id: 'manufacturing-qa',
@@ -189,7 +189,7 @@ const scenarios: Scenario[] = [
     description: '数据录入、报表生成、质检辅助',
     descriptionEn: 'Data entry, report generation, quality inspection',
     icon: 'factory',
-    skills: ['vision', 'screen-control', 'database', 'report-generation', 'file-system'],
+    skills: ['vision', 'screen-control', 'database', 'notion'],
   },
   {
     id: 'smart-home',
@@ -198,7 +198,7 @@ const scenarios: Scenario[] = [
     description: '设备控制、环境调节、自动化场景',
     descriptionEn: 'Device control, environment adjustment, automation',
     icon: 'home',
-    skills: ['iot-api', 'screen-control', 'calendar', 'web-fetch'],
+    skills: ['home-assistant', 'calendar', 'web-fetch'],
   },
   {
     id: 'hr-admin',
@@ -207,7 +207,7 @@ const scenarios: Scenario[] = [
     description: '知识库管理、文档处理、流程自动化',
     descriptionEn: 'Knowledge base, document processing, workflow automation',
     icon: 'users',
-    skills: ['knowledge-base', 'notion', 'browser', 'ocr', 'email-daily-summary', 'calendar'],
+    skills: ['notion', 'browser', 'slack', 'email-daily-summary', 'calendar'],
   },
 ]
 
