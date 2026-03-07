@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Ensure PATH includes standard directories for compatibility
-export PATH="/usr/local/bin:/opt/homebrew/bin:/bin:/usr/bin:$PATH"
+# Alibaba Cloud mirror version
+# This script is optimized for China network environment
+# Uses Alibaba Cloud mirrors: https://mirrors.aliyun.com/homebrew/
 
 # We don't need return codes for "$(command)", only stdout is needed.
 # Allow `[[ -n "$(command)" ]]`, `func "$(command)"`, pipes, etc.

@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # for macOS and Linux (China Mirror Version)
-# Usage: curl -fs OpenClaw InstallerSL https://opendown.ai/cinstall.sh | bash
+# This script uses Alibaba Cloud mirrors to accelerate installation in China
+# Usage: curl -fsSL https://opendown.ai/cinstall.sh | bash
 
 # China mirror settings
 NPM_REGISTRY="https://registry.npmmirror.com"
