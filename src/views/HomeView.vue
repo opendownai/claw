@@ -110,10 +110,10 @@ function goToWizard() {
           </div>
           <div class="feature-card card-apple">
             <div class="feature-icon">
-              <Github class="icon" />
+              <Zap class="icon" />
             </div>
-            <h3 class="feature-name">开源免费</h3>
-            <p class="feature-desc">100% 开源，MIT 许可证，永久免费使用</p>
+            <h3 class="feature-name">{{ language === 'zh' ? '国内镜像加速' : 'China Mirror Acceleration' }}</h3>
+            <p class="feature-desc">{{ language === 'zh' ? '采用阿里云镜像，安装速度提升数倍' : 'Using Alibaba Cloud mirrors, installation speed improved several times' }}</p>
           </div>
         </div>
       </div>
