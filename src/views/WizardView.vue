@@ -7,7 +7,7 @@ import { channelOptions, type ChannelConfig } from '@/utils/channel-types'
 import { 
   Sparkles, ShoppingBag, Megaphone, User, Code, BookOpen, 
   Copy, Check, ArrowRight, AlertCircle, HelpCircle, MessageCircle,
-  TrendingUp, Plane, Store, Factory, Home, Users, FactoryIcon
+  TrendingUp, Plane, Store, Factory, Home, Users, FactoryIcon, ChevronDown
 } from 'lucide-vue-next'
 import ChannelCard from '@/components/wizard/ChannelCard.vue'
 
@@ -87,6 +87,7 @@ const showHelp = ref(false)
 const isWindows = ref(typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('win'))
 const alreadyInstalled = ref(false)
 const commandCopied = ref(false)
+const commandExpanded = ref(false)
 
 const step2TerminalText = computed(() => {
   return isWindows.value ? t.step2TerminalWindows : t.step2Terminal
@@ -629,13 +630,16 @@ onMounted(() => {
 
         <div class="command-preview card-apple">
           <div class="command-header">
-            <span class="command-title">{{ language === 'zh' ? '安装命令预览' : 'Install Command Preview' }}</span>
+            <button @click="commandExpanded = !commandExpanded" class="expand-btn">
+              <ChevronDown class="expand-icon" :class="{ expanded: commandExpanded }" />
+              <span class="command-title">{{ language === 'zh' ? '安装命令预览' : 'Install Command Preview' }}</span>
+            </button>
             <button @click="copyCommand" class="copy-command-btn" :title="language === 'zh' ? '复制命令' : 'Copy command'">
               <Copy v-if="!commandCopied" class="copy-icon" />
               <Check v-else class="copy-icon" />
             </button>
           </div>
-          <pre class="command-content">{{ installScript }}</pre>
+          <pre v-show="commandExpanded" class="command-content">{{ installScript }}</pre>
         </div>
 
         <button @click="copyCommand" class="btn btn-primary copy-btn">
@@ -1239,6 +1243,32 @@ onMounted(() => {
   align-items: center;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-color);
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--text-primary);
+}
+
+.expand-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.expand-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
 }
 
 .command-title {
