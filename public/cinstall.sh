@@ -1327,7 +1327,7 @@ check_node() {
 # Install Node.js
 install_node() {
     if [[ "$OS" == "macos" ]]; then
-        ui_info "Installing Node.js via Homebrew (optimized with mirrors)"
+        ui_info "Installing Node.js via Homebrew (optimized with Alibaba Cloud mirrors)"
         # Set Homebrew mirror environment variables - use Alibaba Cloud which is verified
         export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles"
         # Also configure npm registry for any npm operations during installation
