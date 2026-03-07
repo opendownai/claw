@@ -199,8 +199,8 @@ else
 fi
 CHMOD=("/bin/chmod")
 MKDIR=("/bin/mkdir" "-p")
-HOMEBREW_BREW_DEFAULT_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
-HOMEBREW_CORE_DEFAULT_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
+HOMEBREW_BREW_DEFAULT_GIT_REMOTE="https://mirrors.cloud.tencent.com/homebrew/brew.git"
+HOMEBREW_CORE_DEFAULT_GIT_REMOTE="https://mirrors.cloud.tencent.com/homebrew/homebrew-core.git"
 
 # Use remote URLs of Homebrew repositories from environment if set.
 # If not set, use mirrors
