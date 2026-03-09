@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# skills
+skills/
+*.skill.js
+*.skill.ts
+
+# test files
+test-*.sh
+*-test.sh
+final-test.sh

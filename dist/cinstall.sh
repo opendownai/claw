@@ -8,7 +8,7 @@ set -euo pipefail
 # China mirror settings
 NPM_REGISTRY="https://registry.npmmirror.com"
 GITHUB_MIRROR="https://ghproxy.com/"
-NODESOURCE_MIRROR="https://npmmirror.com/mirrors/node"
+NODESOURCE_MIRROR="https://mirrors.tuna.tsinghua.edu.cn/nodejs-release"
 
 BOLD='\033[1m'
 ACCENT='\033[38;2;255;77;77m'       # coral-bright  #ff4d4d
@@ -1212,16 +1212,16 @@ install_homebrew() {
                 print_homebrew_admin_fix
                 exit 1
             fi
-            ui_info "Installing Homebrew (Alibaba Cloud mirror)"
-            # Use Alibaba Cloud mirror which is verified to exist
-            export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/brew.git"
-            export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.aliyun.com/homebrew/homebrew-core.git"
-            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles"
+            ui_info "Installing Homebrew (Tsinghua University & Gitee mirrors)"
+            # Use Tsinghua University and Gitee mirrors for better performance in China
+            export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
+            export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
+            export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
             
             # Ensure PATH includes standard directories for compatibility
             export PATH="/usr/local/bin:/opt/homebrew/bin:/bin:/usr/bin:$PATH"
             
-            run_quiet_step "Installing Homebrew" run_remote_bash "https://opendown.ai/homebrew-install.sh"
+            run_quiet_step "Installing Homebrew" run_remote_bash "https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh"
 
             # Add Homebrew to PATH for this session
             if [[ -f "/opt/homebrew/bin/brew" ]]; then
