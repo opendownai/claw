@@ -1353,7 +1353,13 @@ install_node() {
         if command -v apt-get &> /dev/null; then
             local tmp
             tmp="$(mktempfile)"
-            download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
+            # Try Tsinghua mirror first, fallback to official if not available
+            if download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp" 2>/dev/null; then
+                ui_info "Using Tsinghua NodeSource mirror"
+            else
+                ui_info "Tsinghua mirror not available, using official NodeSource"
+                download_file "https://deb.nodesource.com/setup_22.x" "$tmp"
+            fi
             if is_root; then
                 run_quiet_step "Configuring NodeSource repository" bash "$tmp"
                 run_quiet_step "Installing Node.js" apt-get install -y -qq nodejs
@@ -1364,7 +1370,13 @@ install_node() {
         elif command -v dnf &> /dev/null; then
             local tmp
             tmp="$(mktempfile)"
-            download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
+            # Try Tsinghua mirror first, fallback to official if not available
+            if download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp" 2>/dev/null; then
+                ui_info "Using Tsinghua NodeSource mirror"
+            else
+                ui_info "Tsinghua mirror not available, using official NodeSource"
+                download_file "https://rpm.nodesource.com/setup_22.x" "$tmp"
+            fi
             if is_root; then
                 run_quiet_step "Configuring NodeSource repository" bash "$tmp"
                 run_quiet_step "Installing Node.js" dnf install -y -q nodejs
@@ -1375,7 +1387,13 @@ install_node() {
         elif command -v yum &> /dev/null; then
             local tmp
             tmp="$(mktempfile)"
-            download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"
+            # Try Tsinghua mirror first, fallback to official if not available
+            if download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp" 2>/dev/null; then
+                ui_info "Using Tsinghua NodeSource mirror"
+            else
+                ui_info "Tsinghua mirror not available, using official NodeSource"
+                download_file "https://rpm.nodesource.com/setup_22.x" "$tmp"
+            fi
             if is_root; then
                 run_quiet_step "Configuring NodeSource repository" bash "$tmp"
                 run_quiet_step "Installing Node.js" yum install -y -q nodejs
@@ -1422,24 +1440,26 @@ install_node_from_nodesource() {
     # Use NodeSource setup script with mirror
     local tmp
     tmp="$(mktempfile)"
-    # Try to download the setup script
-    if download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp"; then
-        # Execute the setup script
-        if bash "$tmp"; then
-            # Verify installation
-            if command -v node &> /dev/null; then
-                local version
-                version="$(node -v 2>/dev/null || true)"
-                local major="${version#v}"
-                major="${major%%.*}"
-                
-                if [[ -n "$major" && "$major" -ge 22 ]]; then
-                    return 0
-                fi
+    # Try to download the setup script from Tsinghua mirror first
+    if download_file "${NODESOURCE_MIRROR}/v22.x/setup_22.x" "$tmp" 2>/dev/null; then
+        ui_info "Using Tsinghua NodeSource mirror"
+    else
+        ui_info "Tsinghua mirror not available, using official NodeSource"
+        download_file "https://deb.nodesource.com/setup_22.x" "$tmp"
+    fi
+    # Execute the setup script
+    if bash "$tmp"; then
+        # Verify installation
+        if command -v node &> /dev/null; then
+            local version
+            version="$(node -v 2>/dev/null || true)"
+            local major="${version#v}"
+            major="${major%%.*}"
+            
+            if [[ -n "$major" && "$major" -ge 22 ]]; then
+                return 0
             fi
         fi
-    else
-        ui_info "NodeSource setup script not available in mirror, skipping"
     fi
     
     return 1
