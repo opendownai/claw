@@ -313,9 +313,8 @@ const installScript = computed(() => {
 
   const configObj = {
     meta: { 
-      lastTouchedVersion: "2026.3.1", 
-      lastRunAt: new Date().toISOString(),
-      lastRunVersion: "2026.3.1",
+      lastTouchedVersion: "2026.2.23", 
+      lastTouchedAt: new Date().toISOString(),
     },
     models: {
       mode: "merge",
