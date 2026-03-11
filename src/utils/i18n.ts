@@ -69,6 +69,12 @@ export interface Translations {
   webhookUrlPlaceholder: string
   secret: string
   secretPlaceholder: string
+  clientId: string
+  clientIdPlaceholder: string
+  clientSecret: string
+  clientSecretPlaceholder: string
+  agentId: string
+  agentIdPlaceholder: string
   botToken: string
   botTokenPlaceholder: string
   chatId: string
@@ -146,7 +152,7 @@ export const translations: Record<Language, Translations> = {
     webInterface: 'Web Interface',
     webInterfaceDesc: 'Interact through DownClaw Web UI',
     dingtalk: 'DingTalk',
-    dingtalkDesc: 'Receive and send messages via DingTalk bot',
+    dingtalkDesc: 'Receive and send messages via DingTalk AI employee with OAuth2 authentication',
     telegram: 'Telegram',
     telegramDesc: 'Receive and send messages via Telegram bot',
     feishu: 'Feishu',
@@ -155,12 +161,18 @@ export const translations: Record<Language, Translations> = {
     webhookUrlPlaceholder: 'https://oapi.dingtalk.com/robot/send?access_token=xxx',
     secret: 'Secret',
     secretPlaceholder: 'Signing key from security settings',
+    clientId: 'App Key',
+    clientIdPlaceholder: 'DINGTalk AppKey (Client ID)',
+    clientSecret: 'App Secret',
+    clientSecretPlaceholder: 'DINGTalk AppSecret (Client Secret)',
+    agentId: 'Agent ID',
+    agentIdPlaceholder: '钉钉AgentId',
     botToken: 'Bot Token',
     botTokenPlaceholder: '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11',
     chatId: 'Chat ID',
     chatIdPlaceholder: '-1001234567890',
     setupGuide: 'Setup Guide',
-    dingtalkGuide: 'DingTalk Bot Setup:\n1. Add custom bot to DingTalk group\n2. Copy Webhook URL and paste above\n3. Add signing key if needed',
+    dingtalkGuide: 'DingTalk AI Employee Setup:\n1. Create an enterprise application in DingTalk Open Platform\n2. Obtain AppKey (Client ID) and AppSecret (Client Secret)\n3. Enable "Receive message callback" and "Subscribe to events"\n4. Set the message callback URL to your server endpoint\n5. Configure the AI employee and obtain Agent ID',
     telegramGuide: 'Telegram Bot Setup:\n1. Search @BotFather in Telegram\n2. Use /newbot to create a new bot\n3. Copy API Token and paste above',
     feishuGuide: 'Feishu Bot Setup:\n1. Add custom bot to Feishu group\n2. Copy Webhook URL and paste above\n3. Add signing key if needed',
     channelNotEnabled: 'Channel not enabled',
@@ -230,7 +242,7 @@ export const translations: Record<Language, Translations> = {
     webInterface: 'Web界面',
     webInterfaceDesc: '通过 DownClaw Web 界面进行交互',
     dingtalk: '钉钉',
-    dingtalkDesc: '通过钉钉机器人接收和发送消息',
+    dingtalkDesc: '通过钉钉AI员工接收和发送消息，支持OAuth2认证和卡片消息',
     telegram: 'Telegram',
     telegramDesc: '通过 Telegram 机器人接收和发送消息',
     feishu: '飞书',
@@ -239,12 +251,18 @@ export const translations: Record<Language, Translations> = {
     webhookUrlPlaceholder: 'https://oapi.dingtalk.com/robot/send?access_token=xxx',
     secret: '签名密钥',
     secretPlaceholder: '安全设置的加签密钥',
+    clientId: 'App Key',
+    clientIdPlaceholder: 'DINGTalk应用的AppKey',
+    clientSecret: 'App Secret',
+    clientSecretPlaceholder: 'DINGTalk应用的AppSecret',
+    agentId: 'Agent ID',
+    agentIdPlaceholder: '钉钉AgentId',
     botToken: 'Bot Token',
     botTokenPlaceholder: '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11',
     chatId: 'Chat ID',
     chatIdPlaceholder: '-1001234567890',
     setupGuide: '配置指南',
-    dingtalkGuide: '钉钉机器人设置指南：\n1. 在钉钉群中添加自定义机器人\n2. 复制Webhook URL并粘贴到上方\n3. 如需安全设置，请添加签名密钥',
+    dingtalkGuide: '钉钉AI员工设置指南：\n1. 在钉钉开放平台创建企业内部应用\n2. 获取AppKey和AppSecret\n3. 开启"接收消息回调"和"订阅事件"权限\n4. 设置消息回调URL为你的服务端点\n5. 配置AI员工并获取Agent ID',
     telegramGuide: 'Telegram机器人设置指南：\n1. 在Telegram中搜索 @BotFather\n2. 使用 /newbot 创建新机器人\n3. 复制API Token并粘贴到上方',
     feishuGuide: '飞书机器人设置指南：\n1. 在飞书群中添加自定义机器人\n2. 复制Webhook URL并粘贴到上方\n3. 如需安全设置，请添加签名密钥',
     channelNotEnabled: '渠道未启用',
