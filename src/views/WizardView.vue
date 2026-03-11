@@ -415,11 +415,11 @@ EOF`
   // Combine modules based on installation type
   let installCommand: string
   if (alreadyInstalled.value) {
-    // For already installed: config, plugins, skills, restart, browser
-    installCommand = getConfigModule() + getPluginsModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
+    // For already installed: plugins, config, skills, restart, browser
+    installCommand = getPluginsModule() + getConfigModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
   } else {
-    // For new install: install, config, plugins, skills, restart, browser
-    installCommand = getInstallModule() + getConfigModule() + getPluginsModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
+    // For new install: install, plugins, config, skills, restart, browser
+    installCommand = getInstallModule() + getPluginsModule() + getConfigModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
   }
   
   return installCommand.trim()
