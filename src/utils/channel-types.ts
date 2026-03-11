@@ -106,31 +106,92 @@ export const channelOptions: ChannelOption[] = [
     color: '#1890FF',
     configFields: [
       {
-        name: 'webhookUrl',
-        label: 'Webhook URL',
-        labelEn: 'Webhook URL',
+        name: 'clientId',
+        label: 'App Key',
+        labelEn: 'App Key',
         type: 'text',
         required: true,
-        placeholder: 'https://oapi.dingtalk.com/robot/send?access_token=xxx',
-        placeholderEn: 'https://oapi.dingtalk.com/robot/send?access_token=xxx'
+        placeholder: 'DINGTalk应用的AppKey (Client ID)',
+        placeholderEn: 'AppKey (Client ID) of DingTalk application'
       },
       {
-        name: 'secret',
-        label: '签名密钥',
-        labelEn: 'Secret',
+        name: 'clientSecret',
+        label: 'App Secret',
+        labelEn: 'App Secret',
         type: 'password',
-        required: false,
-        placeholder: '安全设置的加签密钥',
-        placeholderEn: 'Signing key from security settings'
+        required: true,
+        placeholder: 'DINGTalk应用的AppSecret (Client Secret)',
+        placeholderEn: 'AppSecret (Client Secret) of DingTalk application'
       },
       {
-        name: 'mcpServerUrl',
-        label: 'MCP服务地址',
-        labelEn: 'MCP Server URL',
+        name: 'agentId',
+        label: 'Agent ID',
+        labelEn: 'Agent ID',
+        type: 'text',
+        required: true,
+        placeholder: '钉钉AgentId',
+        placeholderEn: 'DingTalk Agent ID'
+      },
+      {
+        name: 'corpId',
+        label: 'Corp ID',
+        labelEn: 'Corp ID',
         type: 'text',
         required: false,
-        placeholder: 'https://your-mcp-server.com (可选，用于深度集成)',
-        placeholderEn: 'https://your-mcp-server.com (optional, for deep integration)'
+        placeholder: '企业CorpId (可选)',
+        placeholderEn: 'Enterprise CorpId (optional)'
+      },
+      {
+        name: 'robotCode',
+        label: 'Robot Code',
+        labelEn: 'Robot Code',
+        type: 'text',
+        required: false,
+        placeholder: '机器人Code (可选，用于媒体下载)',
+        placeholderEn: 'Robot Code (optional, for media download)'
+      },
+      {
+        name: 'dmPolicy',
+        label: '私聊策略',
+        labelEn: 'DM Policy',
+        type: 'select',
+        required: false,
+        options: [
+          { label: '开放', labelEn: 'Open', value: 'open' },
+          { label: '需匹配', labelEn: 'Pairing', value: 'pairing' },
+          { label: '白名单', labelEn: 'Allowlist', value: 'allowlist' }
+        ]
+      },
+      {
+        name: 'groupPolicy',
+        label: '群聊策略',
+        labelEn: 'Group Policy',
+        type: 'select',
+        required: false,
+        options: [
+          { label: '开放', labelEn: 'Open', value: 'open' },
+          { label: '白名单', labelEn: 'Allowlist', value: 'allowlist' }
+        ]
+      },
+      {
+        name: 'messageType',
+        label: '消息类型',
+        labelEn: 'Message Type',
+        type: 'select',
+        required: false,
+        options: [
+          { label: 'Markdown', labelEn: 'Markdown', value: 'markdown' },
+          { label: '卡片', labelEn: 'Card', value: 'card' }
+        ]
+      },
+      {
+        name: 'cardTemplateId',
+        label: '卡片模板ID',
+        labelEn: 'Card Template ID',
+        type: 'text',
+        required: false,
+        placeholder: 'AI卡片模板ID (可选)',
+        placeholderEn: 'AI Card template ID (optional)'
       }
     ],
     helpUrl: 'https://open.dingtalk.com/document/dingstart/build-dingtalk-ai-employees',

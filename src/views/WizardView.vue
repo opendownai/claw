@@ -291,12 +291,29 @@ const installScript = computed(() => {
     ? Object.fromEntries(bailianModels.map(m => [`bailian/${m.id}`, {}]))
     : Object.fromEntries(iflowModels.map(m => [`iflow/${m.id}`, {}]))
 
+  const isWindows = typeof window !== 'undefined' && navigator.platform.toLowerCase().includes('win')
+
+  const enabledChannels = channelManager.value.getEnabledChannels().filter(c => c.id !== 'web')
+  
+  const pluginsConfig: Record<string, { enabled: boolean }> = {}
+  const pluginInstallCommands: string[] = []
+  
+  enabledChannels.forEach(channel => {
+    if (channel.id === 'telegram') {
+      pluginsConfig['telegram'] = { enabled: true }
+    } else if (channel.id === 'dingtalk') {
+      pluginsConfig['dingtalk'] = { enabled: true }
+      const eol = isWindows ? '\r\n' : '\n'
+      const installCmd = isWindows 
+        ? 'openclaw plugins install @soimy/dingtalk'
+        : 'openclaw plugins install @soimy/dingtalk'
+      pluginInstallCommands.push(installCmd)
+    }
+  })
+
   const configObj = {
     meta: { 
       lastTouchedVersion: "2026.3.1", 
-      lastTouchedAt: new Date().toISOString() 
-    },
-    wizard: {
       lastRunAt: new Date().toISOString(),
       lastRunVersion: "2026.3.1",
     },
@@ -314,16 +331,14 @@ const installScript = computed(() => {
     session: { dmScope: "per-channel-peer" },
     commands: { native: "auto", nativeSkills: "auto", restart: true, ownerDisplay: "raw" },
     hooks: { internal: { enabled: true, entries: { "boot-md": { enabled: true }, "bootstrap-extra-files": { enabled: true }, "command-logger": { enabled: true }, "session-memory": { enabled: true } } } },
-    channels: Object.fromEntries(channelManager.value.getEnabledChannels().filter(c => c.id !== 'web').map(c => [c.id, { enabled: true, ...c.config }])),
+    channels: Object.fromEntries(enabledChannels.map(c => [c.id, { enabled: true, ...c.config }])),
     gateway: { port: 18789, mode: "local", bind: "loopback", auth: { mode: "token", token: "CHANGE_THIS_TOKEN" }, tailscale: { mode: "off", resetOnExit: false } },
     skills: { install: { nodeManager: "npm" } },
-    plugins: { entries: { telegram: { enabled: true } } }
+    plugins: { entries: pluginsConfig }
   }
 
   const configJson = JSON.stringify(configObj, null, 2)
 
-  const isWindows = typeof window !== 'undefined' && navigator.platform.toLowerCase().includes('win')
-  
   const shellHeader = isWindows 
     ? '@echo off\r\nrem Windows CMD\r\n'
     : '#!/bin/bash'
@@ -377,6 +392,13 @@ EOF`
     return `echo ""${eol}echo "====== Install Skills ======"${eol}echo ""${eol}${skillsCommands}\n`
   }
   
+  const getPluginsModule = () => {
+    if (pluginInstallCommands.length === 0) return ''
+    const eol = isWindows ? '\r\n' : '\n'
+    const commands = pluginInstallCommands.join(eol)
+    return `echo ""${eol}echo "====== Install Plugins ======"${eol}echo ""${eol}${commands}\n`
+  }
+  
   const getRestartModule = () => {
     const eol = isWindows ? '\r\n' : '\n'
     const restartCmd = isWindows
@@ -394,11 +416,11 @@ EOF`
   // Combine modules based on installation type
   let installCommand: string
   if (alreadyInstalled.value) {
-    // For already installed: config, skills, restart, browser
-    installCommand = getConfigModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
+    // For already installed: config, plugins, skills, restart, browser
+    installCommand = getConfigModule() + getPluginsModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
   } else {
-    // For new install: install, config, skills, restart, browser
-    installCommand = getInstallModule() + getConfigModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
+    // For new install: install, config, plugins, skills, restart, browser
+    installCommand = getInstallModule() + getConfigModule() + getPluginsModule() + getSkillsModule() + getRestartModule() + getBrowserModule()
   }
   
   return installCommand.trim()
